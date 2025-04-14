@@ -61,7 +61,7 @@ export default function AlbumDetailPage() {
             <div>
               <h1 className="text-2xl font-bold mb-4">Error</h1>
               <p>{error || 'Album not found'}</p>
-              <Link href="/albums" className="mt-4 inline-block text-blue-400 hover:text-blue-300">
+              <Link href="/music" className="mt-4 inline-block text-blue-400 hover:text-blue-300">
                 Back to Albums
               </Link>
             </div>
@@ -84,7 +84,7 @@ export default function AlbumDetailPage() {
   return (
     <div className="album-detail-page">
       <div className="album-detail-container">
-        <Link href="/albums" className="back-link">
+        <Link href="/music" className="back-link">
           <span className="back-link-arrow"><FaArrowLeft /></span> 
           Back to Albums
         </Link>
