@@ -6,9 +6,9 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 // Initialize Supabase client
-const supabaseUrl = "https://rzdoygryvifvcmhhbiaq.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ6ZG95Z3J5dmlmdmNtaGhiaWFxIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0MjA3MTkwNCwiZXhwIjoyMDU3NjQ3OTA0fQ.3kPOo9sKdC6CsO8-7wJtzGDnUwz2JFkT1TCmpVKoMv0";
-const siteUrl = "https://ec-pg.vercel.app";
+const supabaseUrl = "";
+const supabaseKey = "";
+const siteUrl = "";
 
 if (!supabaseUrl || !supabaseKey) {
   console.error('Supabase credentials missing in environment variables');
