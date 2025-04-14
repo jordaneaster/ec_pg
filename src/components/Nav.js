@@ -50,7 +50,7 @@ export default function Nav() {
           {/* User menu for desktop */}
           <div className="program-user-menu">
             <Link href="/cart" aria-label="Shopping Cart" className="program-icon-link">
-              <FaShoppingCart size={18} />
+              <FaShoppingCart size={15} /> {/* Reduced size from 18 to 15 */}
             </Link>
             
             {user ? (
@@ -88,6 +88,7 @@ export default function Nav() {
               <FaTimes size={20} />
             </button>
             <ul>
+              <li><Link href="/" onClick={() => setMenuOpen(false)}>Home</Link></li>
               <li><Link href="/music" onClick={() => setMenuOpen(false)}>Music</Link></li>
               <li><Link href="/events" onClick={() => setMenuOpen(false)}>Events</Link></li>
               <li><Link href="/gallery" onClick={() => setMenuOpen(false)}>Gallery</Link></li>

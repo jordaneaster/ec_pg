@@ -122,6 +122,7 @@ export default function ProductDetailPage({ product, relatedProducts }) {
                     value={quantity}
                     onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
                     className="quantity-input"
+                    style={{ backgroundColor: 'white', color: 'black' }}
                   />
                   <button 
                     onClick={increaseQuantity}
@@ -153,7 +154,9 @@ export default function ProductDetailPage({ product, relatedProducts }) {
             {/* Product Features */}
             <div className="product-detail-features">
               <div className="product-detail-feature">
-                <TruckIcon className="feature-icon h-5 w-5" />
+                <div className="icon-wrapper">
+                  <TruckIcon />
+                </div>
                 <div className="feature-content">
                   <h4>Free Shipping</h4>
                   <p>Free standard shipping on all orders</p>
@@ -161,7 +164,9 @@ export default function ProductDetailPage({ product, relatedProducts }) {
               </div>
               
               <div className="product-detail-feature">
-                <ShieldCheckIcon className="feature-icon h-5 w-5" />
+                <div className="icon-wrapper">
+                  <ShieldCheckIcon />
+                </div>
                 <div className="feature-content">
                   <h4>Secure Payments</h4>
                   <p>Your payment information is processed securely</p>
@@ -169,13 +174,38 @@ export default function ProductDetailPage({ product, relatedProducts }) {
               </div>
               
               <div className="product-detail-feature">
-                <CreditCardIcon className="feature-icon h-5 w-5" />
+                <div className="icon-wrapper">
+                  <CreditCardIcon />
+                </div>
                 <div className="feature-content">
                   <h4>Easy Returns</h4>
                   <p>Simple returns within 30 days of purchase</p>
                 </div>
               </div>
             </div>
+
+            {/* Add custom CSS for the icons */}
+            <style jsx>{`
+              .icon-wrapper {
+                width: 18px;
+                height: 18px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+              }
+              
+              .icon-wrapper :global(svg) {
+                width: 100%;
+                height: 100%;
+              }
+              
+              .product-detail-feature {
+                display: flex;
+                align-items: flex-start;
+                gap: 10px;
+              }
+            `}</style>
           </div>
         </div>
         
