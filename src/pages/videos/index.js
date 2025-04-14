@@ -4,12 +4,10 @@ import VideoCard from '../../components/videos/VideoCard';
 
 export async function getStaticProps() {
   const allVideos = await getAllVideos();
-  const featuredVideos = await getFeaturedVideos();
   
   return {
     props: {
-      allVideos,
-      featuredVideos,
+      allVideos
     },
     revalidate: 60, // Revalidate every minute
   };
@@ -25,17 +23,6 @@ export default function VideosPage({ allVideos, featuredVideos }) {
             Watch performances, interviews, and behind-the-scenes content
           </p>
         </div>
-        
-        {featuredVideos.length > 0 && (
-          <div className="mb-12">
-            <h2 className="text-2xl font-bold mb-6 border-b border-gray-700 pb-2">Featured Videos</h2>
-            <div className="event-grid">
-              {featuredVideos.map(video => (
-                <VideoCard key={video.id} video={video} />
-              ))}
-            </div>
-          </div>
-        )}
         
         {allVideos.length > 0 ? (
           <div>
