@@ -2,7 +2,7 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import Link from 'next/link';
-import { FaCalendarAlt, FaMapMarkerAlt, FaClock, FaTicketAlt } from 'react-icons/fa';
+import { FaCalendarAlt, FaMapMarkerAlt, FaClock, FaTicketAlt, FaArrowLeft, FaInfoCircle } from 'react-icons/fa';
 import { getAllEvents, getEventById } from '../../lib/events';
 
 export async function getStaticPaths() {
@@ -40,12 +40,28 @@ export default function EventDetails({ event }) {
 
   if (router.isFallback) {
     return (
-      <div className="bg-gray-900 text-white min-h-screen">
-        <div className="container mx-auto px-4 py-12">
-          <div className="flex justify-center items-center h-96">
-            <div className="flex flex-col items-center gap-4">
-              <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-white"></div>
-              <p className="text-gray-400">Loading event details...</p>
+      <div className="album-detail-page">
+        <div className="album-detail-container">
+          <div className="page-loader">
+            <div className="loader-spinner"></div>
+            <p>Loading event details...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  
+  if (!event) {
+    return (
+      <div className="album-detail-page">
+        <div className="album-detail-container">
+          <div className="page-error">
+            <div>
+              <h1 className="text-2xl font-bold mb-4">Error</h1>
+              <p>Event not found</p>
+              <Link href="/events" className="mt-4 inline-block text-blue-400 hover:text-blue-300">
+                Back to Events
+              </Link>
             </div>
           </div>
         </div>
@@ -74,105 +90,140 @@ export default function EventDetails({ event }) {
   };
 
   return (
-    <div className="bg-gray-900 text-white min-h-screen">
-      <div className="container mx-auto px-4 py-12 max-w-6xl">
-        <Link href="/events" className="inline-flex items-center text-gray-300 hover:text-white mb-8 group transition-colors">
-          <span className="mr-2 transform group-hover:translate-x-[-4px] transition-transform">&larr;</span> 
+    <div className="album-detail-page">
+      <div className="album-detail-container">
+        <Link href="/events" className="back-link">
+          <span className="back-link-arrow"><FaArrowLeft /></span> 
           Back to Events
         </Link>
         
-        <div className="bg-gray-800 rounded-xl overflow-hidden shadow-2xl transition-shadow hover:shadow-[0_0_25px_rgba(59,130,246,0.2)]">
-          {/* Hero Image */}
-          <div className="relative w-full aspect-[21/9] md:aspect-[3/1]">
-            <Image
-              src={event.image_url || '/placeholder-event.jpg'}
-              alt={event.title}
-              fill
-              priority
-              className="object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
-            
-            <div className="absolute bottom-0 left-0 w-full p-6 md:p-10">
-              <h1 className="text-3xl md:text-5xl font-bold mb-2 text-white drop-shadow-lg">{event.title}</h1>
-            </div>
-            
-            {isPastEvent && (
-              <div className="absolute top-6 right-6 bg-red-600 text-white py-2 px-6 rounded-md font-medium shadow-lg">
-                Past Event
-              </div>
-            )}
-            {event.is_featured && !isPastEvent && (
-              <div className="absolute top-6 right-6 bg-blue-600 text-white py-2 px-6 rounded-md font-medium shadow-lg">
-                Featured Event
-              </div>
-            )}
-          </div>
-          
-          {/* Event Details */}
-          <div className="p-6 md:p-10">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 text-gray-300 bg-gray-700/30 p-5 rounded-lg">
-              <div className="flex items-center gap-3">
-                <div className="bg-blue-600/20 p-3 rounded-full">
-                  <FaCalendarAlt className="text-blue-400 text-xl" />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-400">Date</p>
-                  <p className="font-medium">{formatDate(eventDate)}</p>
-                </div>
-              </div>
-              
-              <div className="flex items-center gap-3">
-                <div className="bg-blue-600/20 p-3 rounded-full">
-                  <FaClock className="text-blue-400 text-xl" />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-400">Time</p>
-                  <p className="font-medium">{formatTime(eventDate)}</p>
-                </div>
-              </div>
-              
-              <div className="flex items-center gap-3">
-                <div className="bg-blue-600/20 p-3 rounded-full">
-                  <FaMapMarkerAlt className="text-blue-400 text-xl" />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-400">Location</p>
-                  <p className="font-medium">{event.location}</p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="prose prose-lg prose-invert max-w-none mb-10">
-              <p className="text-xl leading-relaxed">{event.description}</p>
-              
-              {event.details && (
-                <div className="mt-8 border-t border-gray-700 pt-8" dangerouslySetInnerHTML={{ __html: event.details }} />
-              )}
-            </div>
-            
-            {!isPastEvent && (
-              <div className="mt-10 flex flex-col sm:flex-row gap-4">
-                <Link
-                  href={`/reservations?event=${event.id}`}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-md font-medium text-center transition-colors shadow-lg"
-                >
-                  <FaTicketAlt className="inline-block mr-2" />
-                  Reserve Your Spot
-                </Link>
+        <div className="album-detail-card">
+          <div className="album-detail-content">
+            {/* LEFT COLUMN - Event Image */}
+            <div className="album-cover-column">
+              <div className="album-cover-container">
+                <Image
+                  src={event.image_url || '/placeholder-event.jpg'}
+                  alt={event.title}
+                  fill
+                  priority
+                  className="album-cover-image"
+                  sizes="(max-width: 768px) 256px, 288px"
+                />
                 
-                {event.external_url && (
-                  <Link
-                    href={event.external_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="border border-white text-white hover:bg-white hover:text-black px-8 py-4 rounded-md font-medium text-center transition-all"
-                  >
-                    Learn More
-                  </Link>
+                {isPastEvent && (
+                  <div className="featured-badge" style={{ backgroundColor: "#ef4444" }}>
+                    Past Event
+                  </div>
+                )}
+                
+                {event.is_featured && !isPastEvent && (
+                  <div className="featured-badge">
+                    Featured
+                  </div>
                 )}
               </div>
-            )}
+            </div>
+            
+            {/* RIGHT COLUMN - Event Details */}
+            <div className="album-details-column">
+              <h1 className="album-title">{event.title}</h1>
+              
+              {/* Date, Time & Location */}
+              <div className="album-meta-grid">
+                <div className="album-meta-item">
+                  <div className="meta-icon-container">
+                    <FaCalendarAlt className="meta-icon" />
+                  </div>
+                  <div>
+                    <p className="meta-label">Date</p>
+                    <p className="meta-value">{formatDate(eventDate)}</p>
+                  </div>
+                </div>
+                
+                <div className="album-meta-item">
+                  <div className="meta-icon-container">
+                    <FaClock className="meta-icon" />
+                  </div>
+                  <div>
+                    <p className="meta-label">Time</p>
+                    <p className="meta-value">{formatTime(eventDate)}</p>
+                  </div>
+                </div>
+                
+                <div className="album-meta-item">
+                  <div className="meta-icon-container">
+                    <FaMapMarkerAlt className="meta-icon" />
+                  </div>
+                  <div>
+                    <p className="meta-label">Location</p>
+                    <p className="meta-value">{event.location}</p>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Event Description */}
+              {event.description && (
+                <div className="album-section">
+                  <h2 className="album-section-title">
+                    <FaInfoCircle className="album-section-icon" /> 
+                    Event Overview
+                  </h2>
+                  <div className="album-section-content">
+                    <p>{event.description}</p>
+                  </div>
+                </div>
+              )}
+              
+              {/* Event Details Section */}
+              {event.details && (
+                <div className="album-section">
+                  <h2 className="album-section-title">
+                    <FaInfoCircle className="album-section-icon" /> 
+                    Event Details
+                  </h2>
+                  <div className="album-section-content" dangerouslySetInnerHTML={{ __html: event.details }}>
+                  </div>
+                </div>
+              )}
+              
+              {/* General Information Section */}
+              <div className="album-section">
+                <h2 className="album-section-title">
+                  <FaInfoCircle className="album-section-icon" /> 
+                  Additional Information
+                </h2>
+                <div className="album-section-content">
+                  <p>Please arrive at least 15 minutes before the event starts to ensure smooth entry. For any questions or special accommodations, please contact our event team.</p>
+                </div>
+              </div>
+              
+              {/* Call-to-action buttons */}
+              {!isPastEvent && (
+                <div className="album-cta-container">
+                  <Link
+                    href={`/reservations?event=${event.id}`}
+                    className="cta-button cta-button-spotify"
+                    style={{ backgroundColor: "var(--color-neon-purple)" }}
+                  >
+                    <FaTicketAlt />
+                    Reserve Your Spot
+                  </Link>
+                  
+                  {event.external_url && (
+                    <Link
+                      href={event.external_url}
+                      target="_blank"
+                      rel="noopener noreferrer" 
+                      className="cta-button cta-button-apple"
+                    >
+                      <FaInfoCircle />
+                      Learn More
+                    </Link>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

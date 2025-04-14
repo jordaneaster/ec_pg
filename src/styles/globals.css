@@ -41,6 +41,65 @@ textarea,
 select {
   font: inherit;
 }
+html,
+body,
+div,
+span,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+ul,
+ol,
+li,
+figure,
+figcaption,
+footer,
+header,
+main,
+nav,
+section {
+  cursor: default;
+  user-select: none;
+}
+
+/* Reset cursor and selection for interactive elements */
+a,
+button,
+input,
+textarea,
+select,
+option,
+label {
+  cursor: pointer;
+  user-select: auto;
+}
+
+/* Text input specific cursor */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="search"],
+input[type="url"],
+input[type="tel"],
+input[type="number"],
+input[type="date"],
+input[type="time"],
+input[type="datetime-local"],
+textarea {
+  cursor: text;
+}
+
+/* Make sure images don't get weird selection blue */
+img, svg {
+  user-select: none;
+  -webkit-user-drag: none;
+}
 
 /* --------------------------------------------------------------------------
    2. COLOR VARIABLES & THEME
@@ -2887,4 +2946,1022 @@ nav a.active {
 
 .fixed > div {
   animation: zoomIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+:root {
+ /* E-commerce specific colors */
+ --ecom-bg-primary: #ffffff;
+ --ecom-bg-secondary: #f9fafb;
+ --ecom-bg-accent: #f3f4f6;
+ 
+ --ecom-text-primary: #111827;
+ --ecom-text-secondary: #4b5563;
+ --ecom-text-muted: #6b7280;
+ 
+ --ecom-border-light: #e5e7eb;
+ --ecom-border-medium: #d1d5db;
+ 
+ --ecom-accent-blue: #3b82f6;
+ --ecom-accent-green: #10b981;
+ --ecom-accent-red: #ef4444;
+ 
+ /* E-commerce specific shadows */
+ --ecom-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+ --ecom-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+ --ecom-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* --------------------------------------------------------------------------
+  3. BASE & TYPOGRAPHY
+-------------------------------------------------------------------------- */
+body {
+ font-family: 'Inter', 'Roboto', 'Segoe UI', Helvetica, Arial, sans-serif;
+ font-size: 1.6rem;
+ color: var(--color-text-primary);
+ background-color: var(--color-bg-primary);
+ min-height: 100vh;
+ overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+ margin-bottom: var(--space-md);
+ font-weight: 700;
+ line-height: 1.2;
+ letter-spacing: -0.02em;
+}
+
+h1 {
+ font-size: 4.8rem;
+ background: var(--gradient-main);
+ -webkit-background-clip: text;
+ -webkit-text-fill-color: transparent;
+}
+
+h2 {
+ font-size: 3.6rem;
+}
+
+h3 {
+ font-size: 2.8rem;
+}
+
+h4 {
+ font-size: 2.4rem;
+}
+
+h5 {
+ font-size: 2rem;
+}
+
+h6 {
+ font-size: 1.6rem;
+}
+
+p {
+ margin-bottom: var(--space-md);
+}
+
+a {
+ color: var(--color-neon-blue);
+ text-decoration: none;
+ transition: var(--transition-fast);
+ position: relative;
+}
+
+a:hover {
+ color: var(--color-neon-purple);
+ text-shadow: var(--glow-blue);
+}
+
+a:after {
+ content: '';
+ position: absolute;
+ width: 0;
+ height: 2px;
+ bottom: -2px;
+ left: 0;
+ background: var(--gradient-alt);
+ transition: var(--transition-medium);
+}
+
+a:hover:after {
+ width: 100%;
+}
+
+/* --------------------------------------------------------------------------
+  19. E-COMMERCE STYLING - UPDATED FOR LAYOUT INTEGRATION
+-------------------------------------------------------------------------- */
+/* Update container to work within the site's layout */
+.shop-container {
+ max-width: 1440px;
+ margin: 0 auto;
+ padding: 0 24px;
+ background-color: var(--ecom-bg-primary);
+ color: var(--ecom-text-primary); /* Ensures text is visible against the white bg */
+}
+
+/* Override dark background if needed for e-commerce pages */
+main .shop-container,
+main .product-detail-container {
+ background-color: var(--ecom-bg-primary);
+}
+
+/* Override link styling for shop navigation links */
+.breadcrumb-link:after,
+.product-name:after,
+.product-button:after,
+.empty-state-button:after,
+.pagination-item:after,
+.product-detail-button:after {
+ display: none;
+}
+
+/* Override color scheme in shop area to ensure readability */
+.shop-container h1,
+.shop-container h2,
+.shop-container h3,
+.shop-container p,
+.product-detail-container h1,
+.product-detail-container h2,
+.product-detail-container h3,
+.product-detail-container p {
+ color: var(--ecom-text-primary);
+}
+
+/* Fix for footer layout */
+.site-footer {
+ display: flex;
+ flex-direction: row;
+ width: 100%;
+}
+
+.site-footer .footer-column {
+ flex: 1;
+ padding: 0 16px;
+}
+
+/* Shop page container */
+.shop-container {
+ max-width: 1440px;
+ margin: 0 auto;
+ padding: 0 24px;
+ background-color: var(--ecom-bg-primary);
+}
+
+/* Shop header styling */
+.shop-header {
+ margin-bottom: 24px;
+ border-bottom: 1px solid var(--ecom-border-light);
+ padding-bottom: 16px;
+}
+
+.shop-title {
+ font-size: 24px;
+ font-weight: 600;
+ margin-bottom: 8px;
+ color: var(--ecom-text-primary);
+}
+
+.shop-description {
+ font-size: 14px;
+ color: var(--ecom-text-secondary);
+}
+
+/* Shop layout */
+.shop-layout {
+ display: grid;
+ grid-template-columns: 1fr;
+ gap: 32px;
+}
+
+@media (min-width: 768px) {
+ .shop-layout {
+   grid-template-columns: 280px 1fr;
+ }
+}
+
+/* Filter sidebar */
+.shop-filters {
+ background-color: var(--ecom-bg-primary);
+ border-radius: 8px;
+ border: 1px solid var(--ecom-border-light);
+ overflow: hidden;
+ height: fit-content;
+}
+
+.filter-section {
+ border-bottom: 1px solid var(--ecom-border-light);
+ padding: 16px;
+}
+
+.filter-section:last-child {
+ border-bottom: none;
+}
+
+.filter-header {
+ font-size: 16px;
+ font-weight: 600;
+ margin-bottom: 16px;
+ color: var(--ecom-text-primary);
+}
+
+.filter-list {
+ list-style: none;
+ padding: 0;
+ margin: 0;
+}
+
+.filter-option {
+ margin-bottom: 12px;
+ display: flex;
+ align-items: center;
+}
+
+.filter-option:last-child {
+ margin-bottom: 0;
+}
+
+.filter-option label {
+ display: flex;
+ align-items: center;
+ cursor: pointer;
+ color: var(--ecom-text-secondary);
+ transition: color 0.2s;
+ font-size: 14px;
+}
+
+.filter-option label:hover {
+ color: var(--ecom-text-primary);
+}
+
+.filter-option input[type="checkbox"],
+.filter-option input[type="radio"] {
+ margin-right: 8px;
+ accent-color: var(--ecom-accent-blue);
+ width: 16px;
+ height: 16px;
+}
+
+.filter-reset {
+ display: block;
+ width: 100%;
+ padding: 8px 16px;
+ background-color: var(--ecom-bg-accent);
+ border: 1px solid var(--ecom-border-medium);
+ border-radius: 4px;
+ color: var(--ecom-text-secondary);
+ font-size: 14px;
+ text-align: center;
+ cursor: pointer;
+ transition: all 0.2s;
+}
+
+.filter-reset:hover {
+ background-color: var(--ecom-border-light);
+ color: var(--ecom-text-primary);
+}
+
+/* Sort controls */
+.shop-controls {
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ margin-bottom: 24px;
+ flex-wrap: wrap;
+ gap: 16px;
+}
+
+.shop-results {
+ color: var(--ecom-text-secondary);
+ font-size: 14px;
+}
+
+.sort-container {
+ position: relative;
+}
+
+.sort-select {
+ appearance: none;
+ background-color: var(--ecom-bg-primary);
+ border: 1px solid var(--ecom-border-medium);
+ border-radius: 4px;
+ padding: 8px 36px 8px 12px;
+ font-size: 14px;
+ color: var(--ecom-text-primary);
+ cursor: pointer;
+ transition: border-color 0.2s;
+}
+
+.sort-select:hover, .sort-select:focus {
+ border-color: var(--ecom-accent-blue);
+ outline: none;
+}
+
+.sort-icon {
+ position: absolute;
+ right: 12px;
+ top: 50%;
+ transform: translateY(-50%);
+ pointer-events: none;
+ color: var(--ecom-text-muted);
+}
+
+/* Mobile filter button */
+.mobile-filter-button {
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ gap: 8px;
+ padding: 8px 16px;
+ background-color: var(--ecom-bg-primary);
+ border: 1px solid var(--ecom-border-medium);
+ border-radius: 4px;
+ color: var(--ecom-text-primary);
+ font-size: 14px;
+ cursor: pointer;
+ transition: all 0.2s;
+}
+
+.mobile-filter-button:hover {
+ background-color: var(--ecom-bg-accent);
+}
+
+/* Product grid */
+.products-grid {
+ display: grid;
+ grid-template-columns: repeat(2, 1fr);
+ gap: 16px;
+}
+
+@media (min-width: 640px) {
+ .products-grid {
+   grid-template-columns: repeat(2, 1fr);
+   gap: 24px;
+ }
+}
+
+@media (min-width: 768px) {
+ .products-grid {
+   grid-template-columns: repeat(2, 1fr);
+ }
+}
+
+@media (min-width: 1024px) {
+ .products-grid {
+   grid-template-columns: repeat(3, 1fr);
+ }
+}
+
+@media (min-width: 1280px) {
+ .products-grid {
+   grid-template-columns: repeat(4, 1fr);
+ }
+}
+
+/* Product card */
+.product-card {
+ background-color: var(--ecom-bg-primary);
+ border: 1px solid var(--ecom-border-light);
+ border-radius: 8px;
+ overflow: hidden;
+ transition: transform 0.3s, box-shadow 0.3s;
+ height: 100%;
+ display: flex;
+ flex-direction: column;
+}
+
+.product-card:hover {
+ transform: translateY(-4px);
+ box-shadow: var(--ecom-shadow-md);
+}
+
+.product-image-container {
+ position: relative;
+ width: 100%;
+ padding-top: 100%; /* 1:1 Aspect ratio */
+ background-color: var(--ecom-bg-accent);
+ overflow: hidden;
+}
+
+.product-image {
+ position: absolute;
+ top: 0;
+ left: 0;
+ width: 100%;
+ height: 100%;
+ object-fit: contain;
+ padding: 16px;
+ transition: transform 0.3s;
+}
+
+.product-card:hover .product-image {
+ transform: scale(1.05);
+}
+
+.product-badges {
+ position: absolute;
+ top: 12px;
+ left: 12px;
+ display: flex;
+ flex-direction: column;
+ gap: 8px;
+ z-index: 1;
+}
+
+.product-badge {
+ display: inline-block;
+ padding: 4px 8px;
+ font-size: 12px;
+ font-weight: 600;
+ border-radius: 4px;
+ text-transform: uppercase;
+ letter-spacing: 0.5px;
+}
+
+.badge-featured {
+ background-color: #fbbf24;
+ color: #78350f;
+}
+
+.badge-out-of-stock {
+ background-color: #ef4444;
+ color: white;
+}
+
+.product-details {
+ padding: 16px;
+ flex-grow: 1;
+ display: flex;
+ flex-direction: column;
+}
+
+.product-category {
+ font-size: 12px;
+ color: var(--ecom-text-muted);
+ margin-bottom: 4px;
+}
+
+.product-name {
+ font-size: 16px;
+ font-weight: 500;
+ color: var(--ecom-text-primary);
+ margin-bottom: 8px;
+ line-height: 1.4;
+ /* Support for two-line product names */
+ display: -webkit-box;
+ -webkit-line-clamp: 2;
+ -webkit-box-orient: vertical;
+ overflow: hidden;
+ min-height: 44px;
+}
+
+.product-price {
+ font-size: 18px;
+ font-weight: 600;
+ color: var(--ecom-text-primary);
+ margin-top: auto;
+ margin-bottom: 16px;
+}
+
+.product-button {
+ display: block;
+ width: 100%;
+ padding: 8px 16px;
+ background-color: var(--ecom-accent-blue);
+ color: white;
+ text-align: center;
+ border-radius: 4px;
+ font-size: 14px;
+ font-weight: 500;
+ cursor: pointer;
+ transition: background-color 0.2s;
+ border: none;
+}
+
+.product-button:hover {
+ background-color: #2563eb;
+}
+
+.product-button[disabled] {
+ background-color: #9ca3af;
+ cursor: not-allowed;
+}
+
+/* Empty state */
+.empty-state {
+ padding: 48px 24px;
+ text-align: center;
+ background-color: var(--ecom-bg-primary);
+ border: 1px solid var(--ecom-border-light);
+ border-radius: 8px;
+}
+
+.empty-state-icon {
+ margin: 0 auto 24px;
+ width: 64px;
+ height: 64px;
+ color: var(--ecom-text-muted);
+}
+
+.empty-state-title {
+ font-size: 20px;
+ font-weight: 600;
+ color: var(--ecom-text-primary);
+ margin-bottom: 8px;
+}
+
+.empty-state-text {
+ font-size: 16px;
+ color: var(--ecom-text-secondary);
+ margin-bottom: 24px;
+}
+
+.empty-state-button {
+ display: inline-block;
+ padding: 10px 24px;
+ background-color: var(--ecom-accent-blue);
+ color: white;
+ border-radius: 4px;
+ font-weight: 500;
+ transition: background-color 0.2s;
+}
+
+.empty-state-button:hover {
+ background-color: #2563eb;
+}
+
+/* Pagination */
+.pagination {
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ margin-top: 48px;
+ gap: 8px;
+}
+
+.pagination-item {
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ width: 40px;
+ height: 40px;
+ border-radius: 4px;
+ background-color: var(--ecom-bg-primary);
+ border: 1px solid var(--ecom-border-medium);
+ color: var(--ecom-text-secondary);
+ font-size: 14px;
+ cursor: pointer;
+ transition: all 0.2s;
+}
+
+.pagination-item:hover {
+ border-color: var(--ecom-accent-blue);
+ color: var(--ecom-accent-blue);
+}
+
+.pagination-item.active {
+ background-color: var(--ecom-accent-blue);
+ border-color: var(--ecom-accent-blue);
+ color: white;
+}
+
+.pagination-item.disabled {
+ background-color: var(--ecom-bg-accent);
+ border-color: var(--ecom-border-light);
+ color: var(--ecom-text-muted);
+ cursor: not-allowed;
+}
+
+/* Media queries for responsive layout */
+@media (max-width: 767px) {
+ .shop-filters {
+   position: fixed;
+   top: 0;
+   left: 0;
+   right: 0;
+   bottom: 0;
+   z-index: 50;
+   border-radius: 0;
+   overflow-y: auto;
+   transform: translateX(-100%);
+   transition: transform 0.3s ease;
+ }
+ 
+ .shop-filters.active {
+   transform: translateX(0);
+ }
+ 
+ .filter-header-mobile {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   padding: 16px;
+   border-bottom: 1px solid var(--ecom-border-light);
+ }
+ 
+ .filter-title-mobile {
+   font-size: 18px;
+   font-weight: 600;
+   color: var(--ecom-text-primary);
+ }
+ 
+ .filter-close-mobile {
+   background: none;
+   border: none;
+   color: var(--ecom-text-muted);
+   cursor: pointer;
+   padding: 8px;
+ }
+ 
+ .filter-apply-mobile {
+   position: sticky;
+   bottom: 0;
+   left: 0;
+   right: 0;
+   padding: 16px;
+   background-color: var(--ecom-bg-primary);
+   border-top: 1px solid var(--ecom-border-light);
+ }
+ 
+ .filter-apply-button {
+   width: 100%;
+   padding: 12px 24px;
+   background-color: var(--ecom-accent-blue);
+   color: white;
+   text-align: center;
+   border-radius: 4px;
+   font-size: 16px;
+   font-weight: 500;
+   cursor: pointer;
+   transition: background-color 0.2s;
+   border: none;
+ }
+ 
+ .filter-apply-button:hover {
+   background-color: #2563eb;
+ }
+}
+
+/* Product detail page */
+.product-detail-container {
+ max-width: 1440px;
+ margin: 0 auto;
+ padding: 24px;
+ background-color: var(--ecom-bg-primary);
+}
+
+.product-detail-breadcrumb {
+ display: flex;
+ align-items: center;
+ gap: 8px;
+ margin-bottom: 24px;
+ font-size: 14px;
+ color: var(--ecom-text-muted);
+}
+
+.breadcrumb-separator {
+ color: var(--ecom-text-muted);
+}
+
+.breadcrumb-link {
+ color: var(--ecom-text-secondary);
+ text-decoration: none;
+ transition: color 0.2s;
+}
+
+.breadcrumb-link:hover {
+ color: var(--ecom-accent-blue);
+}
+
+.breadcrumb-current {
+ color: var(--ecom-text-primary);
+ font-weight: 500;
+}
+
+.product-detail-layout {
+ display: grid;
+ grid-template-columns: 1fr;
+ gap: 48px;
+}
+
+@media (min-width: 768px) {
+ .product-detail-layout {
+   grid-template-columns: 1fr 1fr;
+ }
+}
+
+.product-detail-image {
+ position: relative;
+ width: 100%;
+ padding-top: 100%; /* 1:1 Aspect ratio */
+ background-color: var(--ecom-bg-accent);
+ border-radius: 8px;
+ overflow: hidden;
+}
+
+.product-detail-image img {
+ position: absolute;
+ top: 0;
+ left: 0;
+ width: 100%;
+ height: 100%;
+ object-fit: contain;
+ padding: 24px;
+}
+
+.product-detail-content {
+ display: flex;
+ flex-direction: column;
+}
+
+.product-detail-category {
+ font-size: 14px;
+ color: var(--ecom-text-muted);
+ margin-bottom: 8px;
+}
+
+.product-detail-name {
+ font-size: 28px;
+ font-weight: 600;
+ color: var(--ecom-text-primary);
+ margin-bottom: 16px;
+ line-height: 1.3;
+}
+
+.product-detail-price {
+ font-size: 24px;
+ font-weight: 600;
+ color: var(--ecom-text-primary);
+ margin-bottom: 24px;
+}
+
+.product-detail-section {
+ margin-bottom: 32px;
+}
+
+.product-detail-section-title {
+ font-size: 18px;
+ font-weight: 600;
+ color: var(--ecom-text-primary);
+ margin-bottom: 12px;
+}
+
+.product-detail-description {
+ font-size: 16px;
+ color: var(--ecom-text-secondary);
+ line-height: 1.6;
+}
+
+.product-detail-status {
+ display: inline-block;
+ padding: 4px 12px;
+ border-radius: 9999px;
+ font-size: 14px;
+ font-weight: 500;
+ margin-bottom: 24px;
+}
+
+.product-detail-status.in-stock {
+ background-color: rgba(16, 185, 129, 0.1);
+ color: #065f46;
+}
+
+.product-detail-status.out-of-stock {
+ background-color: rgba(239, 68, 68, 0.1);
+ color: #b91c1c;
+}
+
+.product-detail-quantity {
+ margin-bottom: 24px;
+}
+
+.quantity-label {
+ font-size: 16px;
+ font-weight: 500;
+ color: var(--ecom-text-primary);
+ margin-bottom: 8px;
+ display: block;
+}
+
+.quantity-input-group {
+ display: flex;
+ width: fit-content;
+ border: 1px solid var(--ecom-border-medium);
+ border-radius: 4px;
+ overflow: hidden;
+}
+
+.quantity-button {
+ width: 40px;
+ height: 40px;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ background-color: var(--ecom-bg-accent);
+ border: none;
+ color: var(--ecom-text-primary);
+ font-size: 16px;
+ cursor: pointer;
+ transition: background-color 0.2s;
+}
+
+.quantity-button:hover {
+ background-color: var(--ecom-border-light);
+}
+
+.quantity-input {
+ width: 60px;
+ height: 40px;
+ border: none;
+ border-left: 1px solid var(--ecom-border-medium);
+ border-right: 1px solid var(--ecom-border-medium);
+ text-align: center;
+ font-size: 16px;
+ color: var(--ecom-text-primary);
+}
+
+.quantity-input:focus {
+ outline: none;
+}
+
+.product-detail-actions {
+ display: flex;
+ flex-direction: column;
+ gap: 16px;
+}
+
+@media (min-width: 640px) {
+ .product-detail-actions {
+   flex-direction: row;
+ }
+}
+
+.product-detail-button {
+ padding: 12px 24px;
+ border-radius: 4px;
+ font-size: 16px;
+ font-weight: 500;
+ text-align: center;
+ cursor: pointer;
+ transition: all 0.2s;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ gap: 8px;
+ flex: 1;
+}
+
+.product-detail-button-primary {
+ background-color: var(--ecom-accent-blue);
+ color: white;
+ border: none;
+}
+
+.product-detail-button-primary:hover {
+ background-color: #2563eb;
+}
+
+.product-detail-button-secondary {
+ background-color: var(--ecom-bg-primary);
+ color: var(--ecom-text-primary);
+ border: 1px solid var(--ecom-border-medium);
+}
+
+.product-detail-button-secondary:hover {
+ background-color: var(--ecom-bg-accent);
+}
+
+.product-detail-button[disabled] {
+ background-color: #9ca3af;
+ cursor: not-allowed;
+}
+
+.product-detail-features {
+ margin-top: 32px;
+ display: grid;
+ grid-template-columns: 1fr;
+ gap: 16px;
+}
+
+@media (min-width: 640px) {
+ .product-detail-features {
+   grid-template-columns: repeat(3, 1fr);
+ }
+}
+
+.product-detail-feature {
+ display: flex;
+ align-items: flex-start;
+ gap: 12px;
+}
+
+.feature-icon {
+ color: var(--ecom-accent-blue);
+ flex-shrink: 0;
+}
+
+.feature-content h4 {
+ font-size: 14px;
+ font-weight: 600;
+ color: var(--ecom-text-primary);
+ margin-bottom: 4px;
+}
+
+.feature-content p {
+ font-size: 14px;
+ color: var(--ecom-text-secondary);
+}
+
+.related-products {
+ margin-top: 64px;
+}
+
+.related-products-title {
+ font-size: 24px;
+ font-weight: 600;
+ color: var(--ecom-text-primary);
+ margin-bottom: 24px;
+}
+
+/* Fix for horizontal nav and footer in shop pages */
+/* Ensure the nav is displayed horizontally */
+.shop-container nav ul,
+.product-detail-container nav ul {
+ display: flex;
+ flex-direction: row;
+ align-items: center;
+ gap: var(--space-md);
+}
+
+/* Ensure the main navigation doesn't get affected by shop styling */
+.navbar, 
+.navbar nav,
+.navbar ul,
+.navbar li {
+ display: flex;
+ flex-direction: row;
+}
+
+/* Force horizontal menu items */
+.desktop-menu ul,
+.program-desktop-menu ul,
+.user-menu {
+ display: flex !important;
+ flex-direction: row !important;
+}
+
+/* Fix footer layout to ensure horizontal display */
+.site-footer,
+.footer-content,
+.footer-cards-grid,
+.program-footer-grid {
+ display: flex;
+ flex-direction: row;
+ flex-wrap: wrap;
+}
+
+.footer-card,
+.footer-column,
+.program-footer-column {
+ flex: 1 1 250px;
+ min-width: 250px;
+ padding: 1rem;
+}
+
+/* Footer specific overrides for shop pages */
+.shop-container + .site-footer,
+.product-detail-container + .site-footer {
+ background-color: var(--color-bg-primary);
+ color: var(--color-text-primary);
+ width: 100%;
+ display: flex;
+ flex-direction: row;
+ flex-wrap: wrap;
+}
+
+/* Ensure links in footer display properly */
+.footer-links, 
+.program-footer-links {
+ display: flex;
+ flex-direction: column;
+}
+
+/* Social icons in footer should be horizontal */
+.social-icons,
+.program-social-icons {
+ display: flex;
+ flex-direction: row;
+ gap: 1rem;
+}
+
+/* Make sure the e-commerce content has appropriate colors in dark theme */
+.shop-container,
+.product-detail-container {
+ background-color: white;
+ color: var(--ecom-text-primary);
+}
+
+/* Ensure the shop layout doesn't break other layouts */
+main {
+ width: 100%;
 }

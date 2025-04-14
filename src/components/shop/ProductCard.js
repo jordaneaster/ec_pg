@@ -6,39 +6,58 @@ export default function ProductCard({ product }) {
   const [isLoaded, setIsLoaded] = useState(false);
   
   return (
-    <div className="group">
-      <div className="relative aspect-square overflow-hidden rounded-lg mb-3">
-        {!isLoaded && (
-          <div className="absolute inset-0 bg-gray-200 animate-pulse" />
-        )}
+    <div className="product-card">
+      {/* Product Image Container with proper aspect ratio */}
+      <Link href={`/shop/${product.id}`} className="block">
+        <div className="product-image-container">
+          {!isLoaded && (
+            <div className="absolute inset-0 bg-gray-100 animate-pulse" />
+          )}
+          
+          <Image 
+            src={product.image_url} 
+            alt={product.name} 
+            fill
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            className={`product-image ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+            onLoadingComplete={() => setIsLoaded(true)}
+          />
+        </div>
         
-        <Image 
-          src={product.image_url} 
-          alt={product.name} 
-          fill
-          className={`object-cover transition-all duration-300 group-hover:scale-105 ${
-            isLoaded ? 'opacity-100' : 'opacity-0'
-          }`}
-          onLoadingComplete={() => setIsLoaded(true)}
-        />
-        
-        {product.out_of_stock && (
-          <div className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
-            Out of Stock
-          </div>
-        )}
-      </div>
-      
-      <h3 className="font-medium text-gray-900">{product.name}</h3>
-      
-      <div className="flex justify-between items-center mt-1">
-        <p className="font-semibold">${product.price.toFixed(2)}</p>
-        <span className="text-sm text-gray-500">{product.category}</span>
-      </div>
-      
-      <Link href={`/shop/${product.id}`} className="mt-3 block w-full text-center py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors">
-        View Details
+        {/* Product Badges */}
+        <div className="product-badges">
+          {product.featured && (
+            <span className="product-badge badge-featured">
+              Featured
+            </span>
+          )}
+          {product.out_of_stock && (
+            <span className="product-badge badge-out-of-stock">
+              Out of Stock
+            </span>
+          )}
+        </div>
       </Link>
+      
+      {/* Product Info */}
+      <div className="product-details">
+        <div className="product-category">{product.category}</div>
+        
+        <Link href={`/shop/${product.id}`}>
+          <h3 className="product-name" title={product.name}>
+            {product.name}
+          </h3>
+        </Link>
+        
+        <div className="product-price">${parseFloat(product.price).toFixed(2)}</div>
+        
+        <button 
+          className="product-button"
+          disabled={product.out_of_stock}
+        >
+          {product.out_of_stock ? 'Out of Stock' : 'Add to Cart'}
+        </button>
+      </div>
     </div>
   );
 }
