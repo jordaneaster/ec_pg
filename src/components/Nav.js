@@ -74,7 +74,7 @@ export default function Nav() {
         </div>
         
         {/* Mobile Navigation */}
-        <div className={`program-mobile-menu ${menuOpen ? 'active' : ''}`}>
+        <div className={`program-mobile-menu ${menuOpen ? '' : ''}`}>
           <ul>
             <li><Link href="/music" onClick={() => setMenuOpen(false)}>Music</Link></li>
             <li><Link href="/events" onClick={() => setMenuOpen(false)}>Events</Link></li>
