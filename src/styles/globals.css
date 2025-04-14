@@ -996,133 +996,6 @@ nav a.active {
 }
 
 /* --------------------------------------------------------------------------
-   11. FEATURES SECTION STYLING
--------------------------------------------------------------------------- */
-.features-section {
-  position: relative;
-  overflow: hidden;
-  background-color: rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(10px);
-}
-
-.feature-card {
-  background: rgba(30, 30, 36, 0.6);
-  border-radius: var(--radius-lg);
-  padding: 3.2rem 2.4rem;
-  text-align: center;
-  box-shadow: var(--shadow-md);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  transition: var(--transition-medium);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-  overflow: visible; /* Changed from hidden to visible */
-  height: 100%;
-}
-
-.feature-card:hover {
-  transform: translateY(-8px);
-  border-color: var(--color-neon-purple);
-  box-shadow: 0 15px 30px rgba(188, 19, 254, 0.1);
-}
-
-.feature-card:after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 5px;
-  background: linear-gradient(90deg, var(--color-neon-purple), var(--color-neon-pink));
-  opacity: 0;
-  transition: var(--transition-medium);
-}
-
-.feature-card:hover:after {
-  opacity: 1;
-}
-
-/* New container to ensure proper centering and spacing */
-.feature-icon-container {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 1rem;
-  padding: 0.5rem;
-}
-
-.feature-icon-wrapper {
-  width: 8.5rem;
-  height: 8.5rem;
-  min-width: 8.5rem; /* Ensure minimum width */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 1.8rem;
-  background: linear-gradient(135deg, rgba(188, 19, 254, 0.2), rgba(255, 41, 117, 0.2));
-  border-radius: 50%;
-  position: relative;
-}
-
-.feature-icon-wrapper:before {
-  content: '';
-  position: absolute;
-  inset: -2px;
-  border-radius: 50%;
-  padding: 2px;
-  background: linear-gradient(135deg, var(--color-neon-purple), var(--color-neon-pink));
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-}
-
-.feature-icon {
-  font-size: 3.2rem;
-  color: white;
-  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.6));
-}
-
-.feature-title {
-  font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 1.6rem;
-  background: linear-gradient(to right, white, #e0e0e0);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  letter-spacing: 0.02em;
-}
-
-.feature-text {
-  font-size: 1.5rem;
-  color: var(--color-text-secondary);
-  line-height: 1.6;
-}
-
-/* Responsive adjustments for features */
-@media (max-width: 768px) {
-  .feature-card {
-    padding: 2.4rem 1.6rem;
-  }
-  
-  .feature-icon-wrapper {
-    width: 6.4rem;
-    height: 6.4rem;
-    margin-bottom: 2rem;
-  }
-  
-  .feature-icon {
-    font-size: 2.4rem;
-  }
-  
-  .feature-title {
-    font-size: 1.8rem;
-    margin-bottom: 1.2rem;
-  }
-}
-
-/* --------------------------------------------------------------------------
    12. ALBUM CARD SPECIFIC STYLING
 -------------------------------------------------------------------------- */
 .album-card {
@@ -1152,23 +1025,23 @@ nav a.active {
   background-color: rgba(0, 0, 0, 0.3);
 }
 
-/* Album covers typically want to maintain their square shape */
+/* Update album image to match event image styling */
 .album-card__image {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain; /* Changed to contain to preserve album cover proportions */
-  background-color: rgba(0, 0, 0, 0.7); /* Dark background for album covers */
-  padding: 1rem; /* Add some padding around album art */
+  object-fit: none; /* Changed from contain to none to match event card */
+  background-color: transparent; /* Removed background color */
+  padding: 0; /* Removed padding to match event card */
 }
 
 .album-card__featured-badge {
   position: absolute;
   top: 1rem;
   right: 1rem;
-  background-color: var(--color-neon-pink);
+  background-color: var(--color-neon-purple); /* Changed to match event card color */
   color: white;
   font-size: 1.2rem;
   font-weight: 600;
@@ -1233,7 +1106,7 @@ nav a.active {
   overflow: hidden;
 }
 
-/* Actions area */
+/* Actions area with clear separation - match event card */
 .album-card__actions {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1254,12 +1127,12 @@ nav a.active {
 }
 
 .album-card__button--primary {
-  background-color: var(--color-neon-blue);
+  background-color: var(--color-neon-purple); /* Changed from neon-blue to neon-purple */
   color: white;
 }
 
 .album-card__button--primary:hover {
-  background-color: var(--color-neon-purple);
+  background-color: var(--color-neon-pink); /* Changed from neon-purple to neon-pink */
   transform: translateY(-2px);
 }
 
@@ -2594,4 +2467,324 @@ nav a.active {
   z-index: 5;
   margin-top: 10rem; /* Pull it up over the end of the previous section */
   pointer-events: none; /* Ensures it doesn't interfere with clicks */
+}
+
+/* --------------------------------------------------------------------------
+   17. ALBUM DETAIL PAGE STYLING
+-------------------------------------------------------------------------- */
+.album-detail-page {
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  min-height: 100vh;
+}
+
+.album-detail-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  color: var(--color-text-secondary);
+  margin-bottom: 3rem;
+  font-size: 1.6rem;
+  transition: var(--transition-medium);
+}
+
+.back-link:hover {
+  color: var(--color-text-primary);
+}
+
+.back-link-arrow {
+  margin-right: 0.8rem;
+  transition: transform 0.2s ease;
+}
+
+.back-link:hover .back-link-arrow {
+  transform: translateX(-4px);
+}
+
+.album-detail-card {
+  background-color: var(--color-bg-secondary);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: var(--transition-medium);
+  margin-bottom: 3rem;
+}
+
+.album-detail-card:hover {
+  box-shadow: 0 0 25px rgba(59, 130, 246, 0.2);
+}
+
+/* Two-column layout */
+.album-detail-content {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 768px) {
+  .album-detail-content {
+    flex-direction: row;
+  }
+}
+
+/* Left column: Album Cover */
+.album-cover-column {
+  padding: 2.4rem;
+  display: flex;
+  justify-content: center;
+}
+
+@media (min-width: 768px) {
+  .album-cover-column {
+    width: 33.333%;
+    border-right: 1px solid var(--color-bg-tertiary);
+  }
+}
+
+.album-cover-container {
+  position: relative;
+  height: 256px;
+  width: 256px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+@media (min-width: 768px) {
+  .album-cover-container {
+    height: 288px;
+    width: 288px;
+  }
+}
+
+.album-cover-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.featured-badge {
+  position: absolute;
+  top: 0.8rem;
+  right: 0.8rem;
+  background-color: var(--color-neon-blue);
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 600;
+  padding: 0.4rem 0.8rem;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--glow-blue);
+  z-index: 2;
+}
+
+/* Right column: Album Details */
+.album-details-column {
+  padding: 2.4rem;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 768px) {
+  .album-details-column {
+    width: 66.666%;
+  }
+}
+
+.album-title {
+  font-size: 3.2rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: white;
+  line-height: 1.2;
+}
+
+@media (min-width: 768px) {
+  .album-title {
+    font-size: 3.6rem;
+  }
+}
+
+/* Album metadata grid */
+.album-meta-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.6rem;
+  margin-bottom: 2.4rem;
+  padding: 1.6rem;
+  border-radius: var(--radius-md);
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+@media (min-width: 576px) {
+  .album-meta-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.album-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.meta-icon-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 4.8rem;
+  height: 4.8rem;
+  border-radius: 50%;
+  background: rgba(59, 130, 246, 0.2);
+  flex-shrink: 0;
+}
+
+.meta-icon {
+  color: var(--color-neon-blue);
+  font-size: 2rem;
+}
+
+.meta-label {
+  font-size: 1.2rem;
+  color: var(--color-text-tertiary);
+  margin-bottom: 0.2rem;
+}
+
+.meta-value {
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+/* Album sections */
+.album-section {
+  margin-bottom: 2.4rem;
+  padding: 1.6rem;
+  border-radius: var(--radius-md);
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.album-section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--color-neon-blue);
+  margin-bottom: 1.6rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.album-section-icon {
+  color: var(--color-neon-blue);
+}
+
+.album-section-content {
+  color: var(--color-text-secondary);
+  font-size: 1.6rem;
+  line-height: 1.7;
+}
+
+.album-section-content p {
+  margin-bottom: 1.6rem;
+}
+
+.album-section-content p:last-child {
+  margin-bottom: 0;
+}
+
+/* Call to action buttons */
+.album-cta-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+  margin-top: 2.4rem;
+}
+
+@media (min-width: 576px) {
+  .album-cta-container {
+    flex-direction: row;
+  }
+}
+
+.cta-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1.2rem 2.4rem;
+  font-size: 1.6rem;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  transition: var(--transition-medium);
+}
+
+.cta-button-spotify {
+  background-color: #1DB954;
+  color: white;
+}
+
+.cta-button-spotify:hover {
+  background-color: #1aa34a;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px rgba(29, 185, 84, 0.2);
+}
+
+.cta-button-apple {
+  background-color: transparent;
+  color: white;
+  border: 1px solid white;
+}
+
+.cta-button-apple:hover {
+  background-color: white;
+  color: black;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px rgba(255, 255, 255, 0.2);
+}
+
+.cta-button:hover {
+  color: white;
+}
+
+.cta-button:after {
+  display: none;
+}
+
+/* Responsive loader and error styles */
+.page-loader,
+.page-error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 50vh;
+  width: 100%;
+  text-align: center;
+}
+
+.loader-spinner {
+  width: 5rem;
+  height: 5rem;
+  border: 0.3rem solid rgba(255, 255, 255, 0.1);
+  border-top: 0.3rem solid var(--color-neon-blue);
+  border-radius: 50%;
+  margin-bottom: 2rem;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* This prevents the link underline animation from appearing on these buttons */
+.cta-button:after,
+.back-link:after {
+  display: none;
 }

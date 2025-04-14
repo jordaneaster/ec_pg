@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { FaPlay, FaPause, FaVolumeUp, FaVolumeMute, FaExpand, FaEye, FaCalendarAlt, FaExclamationTriangle } from 'react-icons/fa';
 import { VideoService } from '../../lib/video';
 import { cardOverrides } from '../../styles/custom-overrides';
+import Link from 'next/link';
 
 export default function VideoCard({ video }) {
   const [isHovering, setIsHovering] = useState(false);
@@ -716,10 +717,17 @@ export default function VideoCard({ video }) {
         )}
         
         <div className="video-card__actions">
+          <Link 
+            href={`/videos/${video.id}`}
+            className={`video-card__button video-card__button--primary ${cardOverrides.eventCardButton}`}
+          >
+            Details
+          </Link>
+          
           {video.share_url && (
             <button 
               onClick={() => navigator.clipboard.writeText(video.share_url)}
-              className={`video-card__button video-card__button--primary ${cardOverrides.eventCardButton}`}
+              className={`video-card__button video-card__button--secondary ${cardOverrides.eventCardButton}`}
             >
               Share
             </button>

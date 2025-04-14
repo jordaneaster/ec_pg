@@ -87,7 +87,7 @@ export default function Footer() {
             <div className="program-footer-column">
               <h3 className="program-footer-heading">Notifications</h3>
               <p className="text-gray-400 mb-4 font-serif">
-                Receive invitations to our upcoming ceremonies.
+                Receive invitations to our upcoming events and promotions.
               </p>
               <form className="program-newsletter-form">
                 <div className="program-form-group">

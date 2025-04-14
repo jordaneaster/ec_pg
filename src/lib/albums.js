@@ -17,7 +17,7 @@ export async function getAllAlbums() {
 export async function getAlbumById(id) {
   const { data, error } = await supabase
     .from('albums')
-    .select('*, tracks(*)')
+    .select('*')  // Removed tracks(*) since it's not in your schema
     .eq('id', id)
     .single();
   

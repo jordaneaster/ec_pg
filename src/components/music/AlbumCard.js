@@ -52,6 +52,12 @@ export default function AlbumCard({ album }) {
 
         {/* Action Buttons */}
         <div className="album-card__actions">
+          <Link
+            href={`/albums/${album.id}`}
+            className={`album-card__button album-card__button--primary ${cardOverrides.eventCardButton}`}
+          >
+            Details
+          </Link>
           {album.spotify_url && (
             <Link
               href={album.spotify_url}

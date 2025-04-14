@@ -1,4 +1,5 @@
 import { supabase } from './supabaseClient';
+import { generateEventQrCode, qrCodeExists } from '../utils/qrGenerator';
 
 export async function getAllEvents() {
   console.log('Fetching events from Supabase...');
@@ -14,6 +15,21 @@ export async function getAllEvents() {
     if (error) {
       console.error('Error fetching events:', error);
       return [];
+    }
+    
+    // Generate QR codes for events that don't have them
+    // Only run this on the server, not in the browser
+    if (typeof window === 'undefined') {
+      for (const event of data) {
+        if (!qrCodeExists(event.id)) {
+          try {
+            const qrPath = await generateEventQrCode(event.id);
+            console.log(`Generated QR code for event ${event.id}: ${qrPath}`);
+          } catch (err) {
+            console.error(`Failed to generate QR code for event ${event.id}:`, err);
+          }
+        }
+      }
     }
     
     // Log the data to see what we're getting back

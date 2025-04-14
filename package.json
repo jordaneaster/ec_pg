@@ -3,22 +3,28 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "dev:optimized": "node dev.js",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "build:start": "next build && next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "generate-qr": "node scripts/generateAllQrCodes.js"
   },
   "dependencies": {
     "@supabase/auth-helpers-nextjs": "^0.8.1",
     "@supabase/auth-helpers-react": "^0.4.2",
     "@supabase/supabase-js": "^2.36.0",
+    "dotenv": "^16.5.0",
     "framer-motion": "^10.18.0",
+    "fs": "^0.0.1-security",
     "next": "13.5.2",
+    "qrcode": "^1.5.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-icons": "^4.12.0",
-    "stripe": "^13.6.0"
+    "stripe": "^13.6.0",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@types/json5": "^0.0.30",

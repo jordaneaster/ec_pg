@@ -127,12 +127,6 @@ export default function Home({ featuredEvents, latestAlbums, allEvents, featured
       <section className="py-24 mt-24 relative bg-gray-800"> {/* Increased py-20 to py-24 and mt-20 to mt-24 */}
         <div className="container mx-auto px-4 max-w-6xl relative">
           <div className="flex flex-col sm:flex-row justify-between items-end mb-12 border-b border-gray-700 pb-6">
-            {/* <div className="mb-4 sm:mb-0">
-              <h2 className="font-serif text-3xl md:text-4xl font-bold mb-3 text-white">
-                Featured Videos
-              </h2>
-              <p className="text-gray-300 text-lg max-w-xl leading-relaxed font-serif">Watch our best performances and exclusive content</p>
-            </div> */}
             <Link href="/videos" className="flex items-center gap-2 group bg-gray-700 hover:bg-gray-600 px-5 py-2 rounded-sm transition-all duration-300">
               <span className="text-white group-hover:text-white transition-colors font-medium">
                 View All Videos
@@ -140,7 +134,6 @@ export default function Home({ featuredEvents, latestAlbums, allEvents, featured
               <FaArrowRight className="text-white group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
-
           <div className="event-grid">
             {featuredVideos.map((video) => (
               <div key={video.id}>

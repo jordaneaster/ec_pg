@@ -56,7 +56,6 @@ export default function VideoDetails({ video }) {
         setIsLoading(false);
       }
     }
-    
     loadVideo();
   }, [video]);
 
@@ -65,7 +64,10 @@ export default function VideoDetails({ video }) {
       <div className="bg-gray-900 text-white min-h-screen">
         <div className="container mx-auto px-4 py-12">
           <div className="flex justify-center items-center h-96">
-            <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-white"></div>
+            <div className="flex flex-col items-center gap-4">
+              <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-white"></div>
+              <p className="text-gray-400">Loading video...</p>
+            </div>
           </div>
         </div>
       </div>
@@ -76,12 +78,12 @@ export default function VideoDetails({ video }) {
     return (
       <div className="bg-gray-900 text-white min-h-screen">
         <div className="container mx-auto px-4 py-12">
-          <div className="bg-red-900/30 border border-red-700 rounded-md p-6 text-center">
-            <h2 className="text-xl font-bold mb-2">Error</h2>
-            <p>{error}</p>
+          <div className="bg-red-900/30 border border-red-700 rounded-lg p-8 text-center max-w-2xl mx-auto shadow-lg">
+            <h2 className="text-2xl font-bold mb-3 text-red-300">Error</h2>
+            <p className="mb-5">{error}</p>
             <button 
               onClick={() => router.reload()}
-              className="mt-4 bg-white text-black px-4 py-2 rounded"
+              className="mt-4 bg-white text-black px-6 py-2 rounded-md hover:bg-gray-200 transition-colors"
             >
               Try Again
             </button>
@@ -119,12 +121,13 @@ export default function VideoDetails({ video }) {
 
   return (
     <div className="bg-gray-900 text-white min-h-screen">
-      <div className="container mx-auto px-4 py-12">
-        <Link href="/videos" className="inline-flex items-center text-gray-300 hover:text-white mb-6">
-          &larr; Back to Videos
+      <div className="container mx-auto px-4 py-12 max-w-6xl">
+        <Link href="/videos" className="inline-flex items-center text-gray-300 hover:text-white mb-8 group transition-colors">
+          <span className="mr-2 transform group-hover:translate-x-[-4px] transition-transform">&larr;</span> 
+          Back to Videos
         </Link>
         
-        <div className="bg-gray-800 rounded-lg overflow-hidden shadow-xl">
+        <div className="bg-gray-800 rounded-xl overflow-hidden shadow-2xl transition-shadow hover:shadow-[0_0_25px_rgba(59,130,246,0.2)]">
           {/* Video Player */}
           <div className="relative aspect-video w-full bg-black">
             {videoUrl && (
@@ -135,32 +138,33 @@ export default function VideoDetails({ video }) {
                 controls
                 autoPlay
                 playsInline
+                poster={video.thumbnail_url}
               />
             )}
           </div>
           
           {/* Video Details */}
-          <div className="p-8">
-            <h1 className="text-3xl md:text-4xl font-bold mb-4">{video.title}</h1>
+          <div className="p-6 md:p-10">
+            <h1 className="text-3xl md:text-4xl font-bold mb-6 leading-tight">{video.title}</h1>
             
-            <div className="flex flex-wrap gap-6 mb-8 text-gray-300">
+            <div className="flex flex-wrap gap-6 mb-8 text-gray-300 border-b border-gray-700 pb-6">
               {publishDate && (
                 <div className="flex items-center gap-2">
-                  <FaCalendarAlt />
+                  <FaCalendarAlt className="text-blue-400" />
                   <span>{formatDate(publishDate)}</span>
                 </div>
               )}
               
               {video.views !== undefined && (
                 <div className="flex items-center gap-2">
-                  <FaEye />
+                  <FaEye className="text-blue-400" />
                   <span>{video.views.toLocaleString()} views</span>
                 </div>
               )}
             </div>
             
             {video.description && (
-              <div className="prose prose-lg prose-invert max-w-none mb-8">
+              <div className="prose prose-lg prose-invert max-w-none mb-10 leading-relaxed">
                 <p>{video.description}</p>
               </div>
             )}
@@ -168,7 +172,7 @@ export default function VideoDetails({ video }) {
             {video.share_url && (
               <button
                 onClick={handleShare}
-                className="inline-flex items-center gap-2 bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-md"
+                className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-md transition-colors font-medium"
               >
                 <FaShare />
                 Share
