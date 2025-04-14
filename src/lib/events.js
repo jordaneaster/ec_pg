@@ -19,18 +19,18 @@ export async function getAllEvents() {
     
     // Generate QR codes for events that don't have them
     // Only run this on the server, not in the browser
-    if (typeof window === 'undefined') {
-      for (const event of data) {
-        if (!qrCodeExists(event.id)) {
-          try {
-            const qrPath = await generateEventQrCode(event.id);
-            console.log(`Generated QR code for event ${event.id}: ${qrPath}`);
-          } catch (err) {
-            console.error(`Failed to generate QR code for event ${event.id}:`, err);
-          }
-        }
-      }
-    }
+    // if (typeof window === 'undefined') {
+    //   for (const event of data) {
+    //     if (!qrCodeExists(event.id)) {
+    //       try {
+    //         const qrPath = await generateEventQrCode(event.id);
+    //         console.log(`Generated QR code for event ${event.id}: ${qrPath}`);
+    //       } catch (err) {
+    //         console.error(`Failed to generate QR code for event ${event.id}:`, err);
+    //       }
+    //     }
+    //   }
+    // }
     
     // Log the data to see what we're getting back
     console.log(`Successfully fetched ${data?.length || 0} events`);
