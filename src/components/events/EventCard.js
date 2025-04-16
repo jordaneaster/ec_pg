@@ -2,10 +2,12 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import { FaCalendarAlt, FaMapMarkerAlt } from 'react-icons/fa';
 import { cardOverrides } from '../../styles/custom-overrides';
 
 export default function EventCard({ event }) {
+  const router = useRouter();
   const eventDate = event.event_date ? new Date(event.event_date) : new Date();
   const now = new Date();
   const isPastEvent = eventDate < now;
@@ -90,12 +92,25 @@ export default function EventCard({ event }) {
           >
             Details
           </Link>
-          <Link
-            href={`/reservations?event=${event.id}`}
-            className={`event-card__button ${isPastEvent ? 'event-card__button--disabled' : 'event-card__button--secondary'} ${cardOverrides.eventCardButton}`}
-          >
-            {isPastEvent ? 'Past Event' : 'Reserve'}
-          </Link>
+          {!isPastEvent && (
+            <Link
+              href={`/reservations?event=${event.id}`}
+              passHref
+              legacyBehavior
+            >
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  console.log('Reserve button clicked for event:', event.id);
+                  window.location.href = `/reservations?event=${event.id}`;
+                }}
+                className={`event-card__button event-card__button--secondary ${cardOverrides.eventCardButton}`}
+                style={{ cursor: "pointer" }}
+              >
+                Reserve
+              </button>
+            </Link>
+          )}
         </div>
       </div>
     </div>

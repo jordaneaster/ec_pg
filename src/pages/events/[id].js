@@ -201,13 +201,26 @@ export default function EventDetails({ event }) {
               {/* Call-to-action buttons */}
               {!isPastEvent && (
                 <div className="album-cta-container">
-                  <Link
+                  <Link 
                     href={`/reservations?event=${event.id}`}
-                    className="cta-button cta-button-spotify"
-                    style={{ backgroundColor: "var(--color-neon-purple)" }}
+                    passHref
+                    legacyBehavior
                   >
-                    <FaTicketAlt />
-                    Reserve Your Spot
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        console.log('Navigating to reservations for event:', event.id);
+                        router.push(`/reservations?event=${event.id}`);
+                      }}
+                      className="cta-button cta-button-spotify"
+                      style={{ 
+                        backgroundColor: "var(--color-neon-purple)",
+                        cursor: "pointer"
+                      }}
+                    >
+                      <FaTicketAlt />
+                      Reserve Your Spot
+                    </button>
                   </Link>
                   
                   {event.external_url && (

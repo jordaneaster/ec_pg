@@ -93,9 +93,8 @@ export default function Nav() {
               <li><Link href="/events" onClick={() => setMenuOpen(false)}>Events</Link></li>
               <li><Link href="/gallery" onClick={() => setMenuOpen(false)}>Gallery</Link></li>
               <li><Link href="/shop" onClick={() => setMenuOpen(false)}>Shop</Link></li>
-              {/* <li><Link href="/reservations" onClick={() => setMenuOpen(false)}>Attend</Link></li>
-              <li><Link href="/cart" onClick={() => setMenuOpen(false)}>Cart</Link></li> */}
-              {/* {user ? (
+              {/* Uncomment and adjust mobile auth links as needed */}
+              {user ? (
                 <>
                   <li><Link href="/account" onClick={() => setMenuOpen(false)}>Profile</Link></li>
                   <li><Link href="/orders" onClick={() => setMenuOpen(false)}>Orders</Link></li>
@@ -112,7 +111,7 @@ export default function Nav() {
                 </>
               ) : (
                 <li><Link href="/login" onClick={() => setMenuOpen(false)}>Members</Link></li>
-              )} */}
+              )}
             </ul>
           </div>
         </div>
