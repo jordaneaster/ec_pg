@@ -27,6 +27,14 @@ export default function EventCard({ event }) {
     });
   };
 
+  // Add a function to handle direct reservation navigation
+  const handleReserveClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation(); // Prevent event bubbling
+    console.log("Reserve button clicked from card, navigating directly");
+    window.location.href = `/reservations?event=${event.id}`;
+  };
+
   return (
     <div 
       className={`event-card ${isPastEvent ? 'past-event' : ''} ${cardOverrides.eventCard}`} 
@@ -93,23 +101,12 @@ export default function EventCard({ event }) {
             Details
           </Link>
           {!isPastEvent && (
-            <Link
-              href={`/reservations?event=${event.id}`}
-              passHref
-              legacyBehavior
+            <button
+              onClick={handleReserveClick}
+              className="reserve-button"
             >
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  console.log('Reserve button clicked for event:', event.id);
-                  window.location.href = `/reservations?event=${event.id}`;
-                }}
-                className={`event-card__button event-card__button--secondary ${cardOverrides.eventCardButton}`}
-                style={{ cursor: "pointer" }}
-              >
-                Reserve
-              </button>
-            </Link>
+              Reserve Now
+            </button>
           )}
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Link from 'next/link';
@@ -9,10 +9,16 @@ import ReservationForm from '../../components/reservations/ReservationForm';
 
 // Use getServerSideProps instead of client-side data fetching
 export async function getServerSideProps(context) {
+  console.log("getServerSideProps - Starting");
+  console.log("getServerSideProps - Full query:", context.query);
+  
   const { event: eventId } = context.query;
+  
+  console.log("getServerSideProps - Received event ID:", eventId);
   
   // If no event ID is provided, redirect to events page
   if (!eventId) {
+    console.log("getServerSideProps - No event ID provided, redirecting to events page");
     return {
       redirect: {
         destination: '/events',
@@ -22,7 +28,10 @@ export async function getServerSideProps(context) {
   }
   
   try {
+    console.log("getServerSideProps - Fetching event data for ID:", eventId);
     const eventData = await getEventById(eventId);
+    
+    console.log("getServerSideProps - Event data fetched:", eventData ? "Found" : "Not found");
     
     if (!eventData) {
       return {
@@ -33,9 +42,12 @@ export async function getServerSideProps(context) {
       };
     }
     
+    // Ensure the event data is serializable
+    const serializedEvent = JSON.parse(JSON.stringify(eventData));
+    
     return {
       props: {
-        event: eventData,
+        event: serializedEvent,
         error: null,
       },
     };
@@ -52,8 +64,68 @@ export async function getServerSideProps(context) {
 
 export default function ReservationsPage({ event, error }) {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false); 
+  const [clientEvent, setClientEvent] = useState(event);
+  const [clientError, setClientError] = useState(error);
+  const fetchedRef = useRef(false);
   
+  // Simplified useEffect that will only run once when component mounts
+  useEffect(() => {
+    // If we have server-side data, don't do client-side fetching
+    if (event || error) {
+      console.log("Using server-side data", event ? "with event" : "with error");
+      return;
+    }
+
+    // If we already fetched data, don't fetch again
+    if (fetchedRef.current) {
+      console.log("Already fetched data");
+      return;
+    }
+    
+    // Only fetch if router is ready and we have an event ID
+    if (!router.isReady) {
+      console.log("Router not ready");
+      return;
+    }
+
+    const eventId = router.query.event;
+    if (!eventId) {
+      console.log("No event ID, redirecting to events page");
+      router.replace('/events');
+      return;
+    }
+    
+    // Mark that we're fetching to prevent duplicates
+    fetchedRef.current = true;
+    setLoading(true);
+    
+    console.log("Fetching event data for", eventId);
+    
+    // Fetch the event data
+    getEventById(eventId)
+      .then(data => {
+        console.log("Got event data", data ? "successfully" : "not found");
+        if (data) {
+          setClientEvent(data);
+        } else {
+          setClientError("Event not found");
+        }
+      })
+      .catch(err => {
+        console.error("Error fetching event", err);
+        setClientError("Failed to load event details. Please try again.");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []); // Empty dependency array - run only once on mount
+  
+  // Use either server-side or client-side data
+  const displayEvent = clientEvent || event;
+  const displayError = clientError || error;
+  const isLoading = loading && !displayEvent;
+
   const formatDate = (date) => {
     return new Date(date).toLocaleDateString('en-US', {
       weekday: 'long',
@@ -73,7 +145,7 @@ export default function ReservationsPage({ event, error }) {
   return (
     <>
       <Head>
-        <title>{event ? `Reserve - ${event.title}` : 'Event Reservation'} | PGE</title>
+        <title>{displayEvent ? `Reserve - ${displayEvent.title}` : 'Event Reservation'} | PGE</title>
         <meta name="description" content="Reserve your spot for upcoming events" />
       </Head>
       
@@ -86,14 +158,14 @@ export default function ReservationsPage({ event, error }) {
           
           <h1 className="page-title">Event Reservation</h1>
           
-          {loading ? (
+          {isLoading ? (
             <div className="loading-container">
               <div className="loader-spinner"></div>
               <p>Loading event details...</p>
             </div>
-          ) : error ? (
+          ) : displayError || !displayEvent ? (
             <div className="error-container">
-              <p className="error-message">{error}</p>
+              <p className="error-message">{displayError || "Event not found. Please try again."}</p>
               <Link href="/events" className="return-link">
                 Browse Available Events
               </Link>
@@ -103,8 +175,8 @@ export default function ReservationsPage({ event, error }) {
               <div className="event-summary">
                 <div className="event-image-container">
                   <Image
-                    src={event.image_url || '/placeholder-event.jpg'}
-                    alt={event.title}
+                    src={displayEvent.image_url || '/placeholder-event.jpg'}
+                    alt={displayEvent.title}
                     width={300}
                     height={200}
                     className="event-image"
@@ -112,22 +184,22 @@ export default function ReservationsPage({ event, error }) {
                 </div>
                 
                 <div className="event-details">
-                  <h2 className="event-title">{event.title}</h2>
+                  <h2 className="event-title">{displayEvent.title}</h2>
                   
                   <div className="event-meta">
                     <div className="meta-item">
                       <FaCalendarAlt className="meta-icon" />
-                      <span>{formatDate(event.event_date)}</span>
+                      <span>{formatDate(displayEvent.event_date)}</span>
                     </div>
                     
                     <div className="meta-item">
                       <FaClock className="meta-icon" />
-                      <span>{formatTime(event.event_date)}</span>
+                      <span>{formatTime(displayEvent.event_date)}</span>
                     </div>
                     
                     <div className="meta-item">
                       <FaMapMarkerAlt className="meta-icon" />
-                      <span>{event.location}</span>
+                      <span>{displayEvent.location}</span>
                     </div>
                   </div>
                 </div>
@@ -135,7 +207,7 @@ export default function ReservationsPage({ event, error }) {
               
               <div className="reservation-form-container">
                 <h3 className="section-title">Reserve Your Spot</h3>
-                <ReservationForm event={event} />
+                <ReservationForm event={displayEvent} />
               </div>
             </div>
           )}

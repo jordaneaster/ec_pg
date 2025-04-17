@@ -16,20 +16,27 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export async function getStaticProps() {
-  const allEvents = await getAllEvents();
-  const featuredEvents = await getFeaturedEvents(3);
+  const allEvents = await getAllEvents(); // Contains past and future, sorted future first
+  const featuredEvents = await getFeaturedEvents(3); // Now only returns future featured events
   const albums = await getAllAlbums();
   const featuredVideos = await getFeaturedVideos(3);
 
   let finalFeaturedEvents = featuredEvents;
+
+  // Fallback: If no future featured events found via getFeaturedEvents,
+  // try finding future featured events from the allEvents list.
   if (!finalFeaturedEvents.length && allEvents.length) {
-    finalFeaturedEvents = allEvents.filter(event => event.is_featured).slice(0, 3);
+    const now = new Date();
+    finalFeaturedEvents = allEvents
+      .filter(event => event.is_featured && new Date(event.event_date) >= now)
+      .slice(0, 3);
   }
 
   return {
     props: {
+      // allEvents is used elsewhere, keep its original slice
       allEvents: allEvents.slice(0, 6),
-      featuredEvents: finalFeaturedEvents,
+      featuredEvents: finalFeaturedEvents, // This now only contains future featured events
       latestAlbums: albums.slice(0, 4),
       featuredVideos
     },

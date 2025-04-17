@@ -5,6 +5,8 @@ import { AuthProvider } from '../contexts/AuthContext'; // Import AuthProvider
 import Nav from '../components/Nav'; // Import Nav component
 // import Footer from '../components/Footer'; // Optional: Import Footer if you have one
 import '../styles/globals.css';
+import '../styles/auth.css';
+import '../styles/account.css'; // Add account styles
 
 export default function MyApp({ Component, pageProps }) {
   const router = useRouter();

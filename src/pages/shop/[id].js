@@ -1,14 +1,20 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import { getShopItemById, getShopItems } from '../../lib/shop';
-import { ShoppingCartIcon, ArrowLeftIcon, ShieldCheckIcon, TruckIcon, CreditCardIcon } from '@heroicons/react/24/outline';
+import { ArrowLeftIcon, ShieldCheckIcon, TruckIcon, CreditCardIcon } from '@heroicons/react/24/outline';
 import ProductCard from '../../components/shop/ProductCard';
+import AddToCartButton from '../../components/shop/AddToCartButton';
 
 export default function ProductDetailPage({ product, relatedProducts }) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [quantity, setQuantity] = useState(1);
+
+  // Debug product data
+  useEffect(() => {
+    console.log('Product Detail Page - product data:', product);
+  }, [product]);
 
   const decreaseQuantity = () => {
     if (quantity > 1) setQuantity(quantity - 1);
@@ -16,6 +22,12 @@ export default function ProductDetailPage({ product, relatedProducts }) {
 
   const increaseQuantity = () => {
     setQuantity(quantity + 1);
+  };
+
+  // Updated quantity handler to ensure it's a number
+  const handleQuantityChange = (e) => {
+    const newValue = parseInt(e.target.value) || 1;
+    setQuantity(Math.max(1, newValue));
   };
 
   if (!product) {
@@ -120,7 +132,7 @@ export default function ProductDetailPage({ product, relatedProducts }) {
                     id="quantity"
                     min="1"
                     value={quantity}
-                    onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+                    onChange={handleQuantityChange}
                     className="quantity-input"
                     style={{ backgroundColor: 'white', color: 'black' }}
                   />
@@ -135,13 +147,11 @@ export default function ProductDetailPage({ product, relatedProducts }) {
             )}
             
             <div className="product-detail-actions">
-              <button 
-                className={`product-detail-button product-detail-button-primary ${product.out_of_stock ? 'disabled' : ''}`}
-                disabled={product.out_of_stock}
-              >
-                <ShoppingCartIcon className="h-5 w-5" />
-                {product.out_of_stock ? 'Out of Stock' : 'Add to Cart'}
-              </button>
+              <AddToCartButton 
+                product={product}
+                quantity={quantity}
+                className="product-detail-button product-detail-button-primary"
+              />
               
               <button 
                 className="product-detail-button product-detail-button-secondary"

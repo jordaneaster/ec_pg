@@ -68,6 +68,16 @@ export default function AlbumCard({ album }) {
               Spotify
             </Link>
           )}
+          {album.live_mixtapes_url && (
+            <Link
+              href={album.live_mixtapes_url}
+              className={`album-card__button album-card__button--livemixtapes ${cardOverrides.eventCardButton}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Live Mixtapes
+            </Link>
+          )}
           {album.apple_music_url && (
             <Link
               href={album.apple_music_url}

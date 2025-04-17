@@ -1,5 +1,5 @@
 import React from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/router'; // Import useRouter
 import Image from 'next/image';
 import Link from 'next/link';
 import { FaCalendarAlt, FaMapMarkerAlt, FaClock, FaTicketAlt, FaArrowLeft, FaInfoCircle } from 'react-icons/fa';
@@ -37,6 +37,14 @@ export async function getStaticProps({ params }) {
 
 export default function EventDetails({ event }) {
   const router = useRouter();
+
+  // Use direct navigation to avoid Next.js router issues
+  const handleReserveClick = (e) => {
+    e.preventDefault();
+    console.log("Reserve button clicked, using direct navigation");
+    // Direct browser navigation instead of Next.js routing
+    window.location.href = `/reservations?event=${event.id}`;
+  };
 
   if (router.isFallback) {
     return (
@@ -201,27 +209,24 @@ export default function EventDetails({ event }) {
               {/* Call-to-action buttons */}
               {!isPastEvent && (
                 <div className="album-cta-container">
-                  <Link 
-                    href={`/reservations?event=${event.id}`}
-                    passHref
-                    legacyBehavior
+                  <button
+                    onClick={handleReserveClick}
+                    className="cta-button cta-button-spotify"
+                    style={{
+                      backgroundColor: "var(--color-neon-purple)",
+                      cursor: "pointer",
+                      border: "none",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      textDecoration: "none",
+                      fontWeight: "500",
+                      padding: "0.75rem 1.5rem"
+                    }}
                   >
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        console.log('Navigating to reservations for event:', event.id);
-                        router.push(`/reservations?event=${event.id}`);
-                      }}
-                      className="cta-button cta-button-spotify"
-                      style={{ 
-                        backgroundColor: "var(--color-neon-purple)",
-                        cursor: "pointer"
-                      }}
-                    >
-                      <FaTicketAlt />
-                      Reserve Your Spot
-                    </button>
-                  </Link>
+                    <FaTicketAlt />
+                    Reserve Your Spot
+                  </button>
                   
                   {event.external_url && (
                     <Link

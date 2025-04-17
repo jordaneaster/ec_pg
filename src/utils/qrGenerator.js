@@ -15,9 +15,8 @@ const supabase = createClient(supabaseUrl, supabaseKey);
  */
 export async function generateAndStoreQRCode(eventId, reservationId, reservationData) {
   try {
-    // Create the confirmation URL to be encoded in the QR code
-    const baseUrl = window.location.origin;
-    const confirmationUrl = `${baseUrl}/reservations/confirmation?event=${eventId}&reservation=${reservationId}`;
+    // Use the getReservationUrl function instead of constructing the URL directly
+    const confirmationUrl = getReservationUrl(eventId, reservationId);
     console.log('Generating QR code for URL:', confirmationUrl);
     
     // Generate QR code as data URL (same as QRCodeService.js)
@@ -140,9 +139,8 @@ export async function generateAndStoreQRCode(eventId, reservationId, reservation
  * @returns {string} - The public URL for the reservation
  */
 export function getReservationUrl(eventId, reservationId) {
-  const baseUrl = typeof window !== 'undefined' 
-    ? window.location.origin 
-    : process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+  // Fix: Properly structure fallback chain so production URL takes priority over localhost
+  const baseUrl = 'https://ec-pg.vercel.app'; // Remove trailing slash and fix fallback logic
     
   return `${baseUrl}/reservations/confirmation?event=${eventId}&reservation=${reservationId}`;
 }

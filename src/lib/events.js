@@ -94,19 +94,21 @@ export async function getEventById(id) {
 // Add a function to get featured events specifically
 export async function getFeaturedEvents(limit = 3) {
   try {
+    const now = new Date().toISOString(); // Get current date in ISO format
     const { data, error } = await supabase
       .from('events')
       .select('*')
       .eq('is_featured', true)
+      .gte('event_date', now) // Only select events from today onwards
       .order('event_date', { ascending: true })
       .limit(limit);
-      
+
     if (error) {
       console.error('Error fetching featured events:', error);
       return [];
     }
-    
-    console.log(`Successfully fetched ${data?.length || 0} featured events`);
+
+    console.log(`Successfully fetched ${data?.length || 0} future featured events`);
     return data || [];
   } catch (e) {
     console.error('Unexpected error in getFeaturedEvents:', e);

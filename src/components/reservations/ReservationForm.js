@@ -3,9 +3,12 @@ import { useRouter } from 'next/router';
 import { FaEnvelope, FaSms } from 'react-icons/fa';
 import { generateAndStoreQRCode } from '../../utils/qrGenerator';
 import { v4 as uuidv4 } from 'uuid'; // Add UUID for proper ID generation
+import { useAuth } from '../../contexts/AuthContext'; // Add this import
 
 export default function ReservationForm({ event }) {
   const router = useRouter();
+  // Update how we destructure from useAuth to handle potential missing methods
+  const { user, getToken, session } = useAuth(); // Get auth context
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -109,12 +112,36 @@ export default function ReservationForm({ event }) {
         updated_at: new Date().toISOString()
       };
       
+      // Get the auth token if user is signed in
+      const headers = {
+        'Content-Type': 'application/json',
+      };
+      
+      if (user) {
+        // Fix the token retrieval to handle different auth implementations
+        let token = null;
+        
+        // Try different methods to get the token based on what's available
+        if (typeof getToken === 'function') {
+          // If getToken function exists, use it
+          token = await getToken();
+        } else if (session?.access_token) {
+          // If there's a session with access_token, use that
+          token = session.access_token;
+        } else if (user.token) {
+          // If user object has a token property
+          token = user.token;
+        }
+        
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
+        }
+      }
+      
       // Send reservation data to API
       const response = await fetch('/api/reservations', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers,
         body: JSON.stringify(reservationData),
       });
       

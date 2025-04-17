@@ -30,6 +30,24 @@ export default async function handler(req, res) {
       reservationData.qr_code_url = `${supabaseUrl}/storage/v1/object/public/event-marketing/qr-codes/event-${reservationData.event_id}/${reservationData.id}.png`;
     }
 
+    // Include user_id if available
+    if (req.headers.authorization) {
+      try {
+        // Extract the token
+        const token = req.headers.authorization.split(' ')[1];
+        
+        // Verify the token
+        const { data: { user }, error } = await supabase.auth.getUser(token);
+        
+        if (user && !error) {
+          reservationData.user_id = user.id;
+        }
+      } catch (error) {
+        console.error('Error extracting user from token:', error);
+        // Continue without user_id
+      }
+    }
+
     console.log("Saving reservation with ID:", reservationData.id);
     console.log("QR code URL:", reservationData.qr_code_url);
     

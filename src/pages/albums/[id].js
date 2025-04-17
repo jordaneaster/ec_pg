@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { FaSpotify, FaApple, FaCalendarAlt, FaUser, FaMusic, FaArrowLeft } from 'react-icons/fa';
+import { FaSpotify, FaApple, FaCalendarAlt, FaUser, FaMusic, FaArrowLeft, FaYoutube } from 'react-icons/fa';
 import { getAlbumById } from '../../lib/albums';
 
 export default function AlbumDetailPage() {
@@ -20,6 +20,9 @@ export default function AlbumDetailPage() {
       try {
         setLoading(true);
         const albumData = await getAlbumById(id);
+        
+        // Log the fetched data to the browser console
+        console.log('Fetched Album Data:', albumData); 
         
         if (!albumData) {
           setError('Album not found');
@@ -81,6 +84,11 @@ export default function AlbumDetailPage() {
     });
   };
 
+  // Log the album state right before rendering
+  if (album) {
+    console.log('Album state before render:', album);
+  }
+
   return (
     <div className="album-detail-page">
       <div className="album-detail-container">
@@ -109,6 +117,39 @@ export default function AlbumDetailPage() {
                   </div>
                 )}
               </div>
+              
+              {/* Music platform links under album cover */}
+              {/* Update container condition to include live_mixtapes_url */}
+              {album && (album.spotify_url || album.apple_music_url || album.youtube_url || album.live_mixtapes_url) && (
+                <div className="album-platform-links">
+                  {album.spotify_url && (
+                    <Link href={album.spotify_url} target="_blank" rel="noopener noreferrer" 
+                      className="platform-link platform-link-spotify" title="Listen on Spotify">
+                      <FaSpotify />
+                    </Link>
+                  )}
+                  {/* Add Live Mixtapes link */}
+                  {album.live_mixtapes_url && (
+                    <Link href={album.live_mixtapes_url} target="_blank" rel="noopener noreferrer" 
+                      className="platform-link platform-link-livemixtapes" title="Listen on Live Mixtapes">
+                      {/* Using FaMusic as a placeholder icon */}
+                      <FaMusic /> 
+                    </Link>
+                  )}
+                  {album.apple_music_url && (
+                    <Link href={album.apple_music_url} target="_blank" rel="noopener noreferrer" 
+                      className="platform-link platform-link-apple" title="Listen on Apple Music">
+                      <FaApple />
+                    </Link>
+                  )}
+                  {album.youtube_url && (
+                    <Link href={album.youtube_url} target="_blank" rel="noopener noreferrer" 
+                      className="platform-link platform-link-youtube" title="Watch on YouTube">
+                      <FaYoutube />
+                    </Link>
+                  )}
+                </div>
+              )}
             </div>
             
             {/* RIGHT COLUMN - Album Details */}
@@ -190,6 +231,19 @@ export default function AlbumDetailPage() {
                   </Link>
                 )}
                 
+                {/* Add Live Mixtapes CTA button */}
+                {album.live_mixtapes_url && (
+                  <Link
+                    href={album.live_mixtapes_url}
+                    target="_blank"
+                    rel="noopener noreferrer" 
+                    className="cta-button cta-button-livemixtapes" // Add specific class for styling
+                  >
+                    <FaMusic /> {/* Using FaMusic icon */}
+                    Listen on Live Mixtapes
+                  </Link>
+                )}
+
                 {album.apple_music_url && (
                   <Link
                     href={album.apple_music_url}
@@ -206,6 +260,49 @@ export default function AlbumDetailPage() {
           </div>
         </div>
       </div>
+
+      {/* Adding styles for platform links */}
+      <style jsx>{`
+        .album-platform-links {
+          display: flex;
+          justify-content: center;
+          gap: 1rem;
+          margin-top: 1.5rem;
+        }
+        
+        .platform-link {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 3rem;
+          height: 3rem;
+          border-radius: 50%;
+          font-size: 1.5rem;
+          color: white;
+          transition: transform 0.2s ease-in-out;
+        }
+        
+        .platform-link:hover {
+          transform: scale(1.1);
+        }
+        
+        .platform-link-spotify {
+          background-color: #1DB954;
+        }
+
+        /* Add style for Live Mixtapes button */
+        .platform-link-livemixtapes {
+          background-color: #ff6600; /* Example color - adjust as needed */
+        }
+        
+        .platform-link-apple {
+          background-color: #FB2D4D;
+        }
+        
+        .platform-link-youtube {
+          background-color: #FF0000;
+        }
+      `}</style>
     </div>
   );
 }

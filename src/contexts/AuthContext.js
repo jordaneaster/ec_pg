@@ -12,6 +12,7 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [userProfile, setUserProfile] = useState(null);
 
   useEffect(() => {
     // Get initial session
@@ -34,6 +35,26 @@ export function AuthProvider({ children }) {
       subscription?.unsubscribe();
     };
   }, []);
+
+  useEffect(() => {
+    if (user) {
+      const fetchUserProfile = async () => {
+        try {
+          const response = await fetch(`/api/users/${user.id}`);
+          if (response.ok) {
+            const profile = await response.json();
+            setUserProfile(profile);
+          }
+        } catch (error) {
+          console.error('Failed to fetch user profile:', error);
+        }
+      };
+
+      fetchUserProfile();
+    } else {
+      setUserProfile(null);
+    }
+  }, [user]);
 
   // Sign up function
   const signUp = async (email, password) => {
@@ -68,6 +89,8 @@ export function AuthProvider({ children }) {
     signInWithPassword,
     signOut,
     loading, // Expose loading state if needed by components
+    userProfile,
+    setUserProfile,
   };
 
   return (
