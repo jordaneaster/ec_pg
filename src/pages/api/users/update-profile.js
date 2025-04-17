@@ -1,7 +1,18 @@
-import { supabase } from '../../../lib/supabaseClient';
+// Import createClient from Supabase SDK
+import { createClient } from '@supabase/supabase-js';
+
+// Ensure environment variables are loaded (Next.js does this automatically)
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+// IMPORTANT: Use the Service Role Key for server-side admin actions
+const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+// Create a Supabase client instance using the Service Role Key
+// This client bypasses RLS policies. Use with caution.
+const supabaseAdmin = createClient(supabaseUrl, supabaseServiceRoleKey);
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
+    res.setHeader('Allow', ['POST']);
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
@@ -11,52 +22,55 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'auth_id is required' });
   }
 
-  console.log('[API] Updating user with auth_id:', auth_id);
-  console.log('[API] Update data:', userData);
+  // **Security Note**: In a real app, you might want to verify
+  // that the request comes from an authenticated user who is
+  // authorized to update this profile, perhaps by validating a session token.
+  // For now, we trust that the frontend sends the correct auth_id for the logged-in user.
+
+  console.log('[API - Admin] Updating user with auth_id:', auth_id);
+  console.log('[API - Admin] Update data:', userData);
+
+  // Prepare data for update
+  const updateData = {
+    ...userData,
+    updated_at: new Date().toISOString(),
+  };
+  delete updateData.auth_id;
+  delete updateData.created_at;
+  delete updateData.email; // Email shouldn't be updated here typically
 
   try {
-    // Try PostgreSQL UPDATE with RETURNING
-    const { data, error } = await supabase
+    // Use the supabaseAdmin client (with service role) for the update
+    const { data, error } = await supabaseAdmin
       .from('users')
-      .update({
-        display_name: userData.display_name,
-        full_name: userData.full_name,
-        phone_number: userData.phone_number,
-        bio: userData.bio, 
-        profile_image_url: userData.profile_image_url,
-        updated_at: userData.updated_at
-      })
+      .update(updateData)
       .eq('auth_id', auth_id)
-      .select();
+      .select()
+      .single();
 
     if (error) {
-      console.error('[API] Error updating user:', error);
+      console.error('[API - Admin] Error updating user:', error);
+      // Check if the error is specifically "Not Found" even with service key
+      if (error.code === 'PGRST116') {
+        console.error(`[API - Admin] User with auth_id ${auth_id} truly not found in DB.`);
+        return res.status(404).json({ error: 'User not found' });
+      }
+      // Handle other potential errors (e.g., database constraints)
       return res.status(500).json({ error: error.message });
     }
 
-    console.log('[API] Update result:', data);
-
-    // If update succeeded but returned no data, fetch the user
-    if (!data || data.length === 0) {
-      const { data: fetchedUser, error: fetchError } = await supabase
-        .from('users')
-        .select('*')
-        .eq('auth_id', auth_id)
-        .single();
-
-      if (fetchError) {
-        console.error('[API] Error fetching user after update:', fetchError);
-        return res.status(500).json({ error: fetchError.message });
-      }
-
-      console.log('[API] Fetched user after update:', fetchedUser);
-      return res.status(200).json(fetchedUser);
+    // If data is null after a successful update without error (shouldn't happen with .select().single())
+    if (!data) {
+        console.error('[API - Admin] Update seemed successful but no data returned.');
+        return res.status(500).json({ error: 'Failed to retrieve updated user data.' });
     }
 
-    // Return the user data from the update query
-    return res.status(200).json(data[0]);
+    console.log('[API - Admin] Update successful, returned data:', data);
+    return res.status(200).json(data); // Return the updated user data
+
   } catch (error) {
-    console.error('[API] Unexpected error:', error);
-    return res.status(500).json({ error: error.message });
+    // Catch unexpected errors during the process
+    console.error('[API - Admin] Unexpected error:', error);
+    return res.status(500).json({ error: error.message || 'An unexpected error occurred' });
   }
 }

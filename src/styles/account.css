@@ -3,54 +3,85 @@
 /* Container & Layout */
 .profile-container {
   padding-bottom: 3rem;
+  max-width: 1200px; /* Optional: Constrain width like many platforms */
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* Profile Header */
 .profile-header {
-  background: linear-gradient(to right, rgba(79, 70, 229, 0.2) 0%, rgba(79, 70, 229, 0) 100%);
-  border-radius: 1.5rem;
-  padding: 1.5rem;
-  margin-bottom: 1.5rem;
+  /* Use a subtle background or keep it clean */
+  background-color: rgba(31, 41, 55, 0.3); /* Slightly different background */
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.08); /* Subtle border */
+  border-radius: 1rem; /* Slightly smaller radius */
+  padding: 1.5rem 2rem; /* Adjust padding */
+  margin-bottom: 2rem; /* Increase spacing */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Softer shadow */
 }
 
 .profile-avatar-wrapper {
   position: relative;
+  flex-shrink: 0; /* Ensure wrapper doesn't shrink in flex layout */
 }
 
 .profile-avatar {
-  position: relative;
-  background: linear-gradient(45deg, #6366F1, #A855F7);
+  position: relative; /* REQUIRED for next/image fill */
+  background: linear-gradient(45deg, #4f46e5, #a855f7); /* Indigo to Purple gradient */
   border-radius: 50%;
-  padding: 0.25rem;
+  overflow: hidden; /* REQUIRED for next/image fill */
+  border: 3px solid #374151; /* Slightly thicker border */
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3); /* Add shadow to avatar */
+  
+  /* Enforce stricter size constraints */
+  width: 64px;  /* Even smaller base size for mobile */
+  height: 64px; /* Even smaller base size for mobile */
+  flex-shrink: 0; /* Redundant but safe */
+  display: flex; /* For centering the fallback text */
+  align-items: center;
+  justify-content: center;
 }
 
-.shadow-glow {
-  box-shadow: 0 0 25px rgba(139, 92, 246, 0.5);
+/* Force the image itself to respect the container when using fill */
+.profile-avatar img {
+  position: absolute !important; /* Force absolute positioning */
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important; /* Force width */
+  height: 100% !important; /* Force height */
+  object-fit: cover !important; /* Force object-fit */
+  border-radius: 50% !important; /* Ensure image itself is rounded */
 }
 
 .profile-info h1 {
   margin-bottom: 0.5rem;
+  font-size: 2rem; /* Slightly larger name */
+  font-weight: 700; /* Bolder name */
 }
 
 /* Sidebar Navigation */
 .sidebar-nav {
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.08); /* Match header border */
+  border-radius: 0.75rem; /* Consistent radius */
   overflow: hidden;
+  background-color: rgba(31, 41, 55, 0.3); /* Match header background */
+  backdrop-filter: blur(10px); /* Match header blur */
 }
 
 .nav-item {
-  transition: all 0.2s ease;
-  border-left: 3px solid transparent;
+  transition: all 0.15s ease-in-out;
+  border-left: 4px solid transparent; /* Slightly thicker indicator */
+  padding: 0.8rem 1rem; /* Adjust padding */
 }
 
 .nav-item:hover {
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: rgba(255, 255, 255, 0.07); /* Slightly more visible hover */
 }
 
 .nav-item-active {
-  background-color: rgba(99, 102, 241, 0.15);
-  border-left: 3px solid rgba(99, 102, 241, 1);
+  background-color: rgba(79, 70, 229, 0.15); /* Indigo active state */
+  border-left-color: #4f46e5; /* Indigo border */
+  color: #e0e7ff; /* Lighter text for active */
 }
 
 /* Mobile Tab Select */
@@ -65,37 +96,144 @@
 
 /* Main Content Panel */
 .profile-panel {
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.08); /* Match header/sidebar */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); /* Slightly adjusted shadow */
   height: 100%;
+  border-radius: 0.75rem; /* Consistent radius */
+  /* Background/blur applied directly in JSX */
+}
+
+/* Grid for Cards */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Responsive grid */
+  gap: 1.25rem; /* Gap between cards */
 }
 
 /* Profile Cards */
 .profile-card {
-  background-color: rgba(31, 41, 55, 0.5);
-  border-radius: 1rem;
-  padding: 1.25rem;
-  border: 1px solid rgba(75, 85, 99, 0.2);
+  background-color: rgba(49, 49, 60, 0.4); /* Slightly lighter card background */
+  border-radius: 0.75rem; /* Consistent radius */
+  padding: 1rem 1.25rem; /* Adjust padding */
+  border: 1px solid rgba(255, 255, 255, 0.08); /* Subtle border */
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex; /* Use flex for better internal layout */
+  flex-direction: column; /* Stack content vertically */
+  height: 100%; /* Make cards in grid equal height if needed */
 }
 
 .profile-card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
 }
 
 .card-header {
   margin-bottom: 0.75rem;
+  font-size: 1.1rem; /* Slightly larger card titles */
+  font-weight: 600;
 }
 
 .card-label {
-  font-size: 0.75rem;
+  font-size: 0.7rem; /* Smaller label */
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #9CA3AF;
+  letter-spacing: 0.07em; /* Adjust spacing */
+  color: #a0aec0; /* Lighter gray */
 }
 
 .card-content {
+  font-size: 0.9rem; /* Adjust content size */
+  flex-grow: 1; /* Allow content to fill space */
+  margin-bottom: 1rem; /* Space before footer */
+}
+
+.card-footer {
+  margin-top: auto; /* Push footer to bottom */
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 0.75rem;
+}
+
+/* --- Profile Tab Specific Styles --- */
+
+/* Create Post Box */
+.create-post-box {
+  background-color: rgba(49, 49, 60, 0.4); /* Match card background */
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.create-post-textarea {
+  flex-grow: 1;
+  background-color: rgba(31, 41, 55, 0.5); /* Darker input background */
+  border: 1px solid rgba(75, 85, 99, 0.5);
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  color: #e5e7eb; /* Light text */
   font-size: 0.95rem;
+  resize: vertical; /* Allow vertical resize */
+  min-height: 60px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.create-post-textarea::placeholder {
+  color: #6b7280; /* Gray placeholder */
+}
+
+.create-post-textarea:focus {
+  outline: none;
+  border-color: #4f46e5; /* Indigo focus border */
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.3); /* Indigo focus ring */
+}
+
+/* Post Feed */
+.post-feed {
+  /* Optional: Add specific styling if needed, otherwise rely on space-y */
+}
+
+/* Individual Post Card */
+.post-card {
+  background-color: rgba(49, 49, 60, 0.4); /* Match card background */
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.post-header {
+  margin-bottom: 0.75rem;
+}
+
+.post-content {
+  color: #d1d5db; /* Slightly lighter than default text */
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  white-space: pre-wrap; /* Preserve line breaks */
+}
+
+.post-actions {
+  display: flex;
+  gap: 0.5rem; /* Spacing between buttons */
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 0.75rem;
+}
+
+.post-action-btn {
+  display: inline-flex;
+  align-items: center;
+  background: none;
+  border: none;
+  color: #9ca3af; /* Gray icon/text */
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 0.4rem 0.8rem;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.post-action-btn:hover {
+  background-color: rgba(255, 255, 255, 0.07);
+  color: #e5e7eb; /* Lighter text on hover */
 }
 
 /* Status indicator */
@@ -312,33 +450,35 @@ input:checked + .toggle-slider:before {
 
 /* Buttons */
 .btn-primary {
-  background: linear-gradient(to right, #6366F1, #8B5CF6);
+  background: linear-gradient(to right, #4f46e5, #7c3aed); /* Adjusted gradient */
   color: white;
-  font-weight: 500;
-  padding: 0.75rem 1.5rem;
+  font-weight: 600; /* Bolder */
+  padding: 0.6rem 1.2rem; /* Adjust padding */
   border-radius: 0.5rem;
   transition: all 0.2s ease;
   border: none;
-  box-shadow: 0 4px 6px rgba(99, 102, 241, 0.2);
+  box-shadow: 0 2px 4px rgba(79, 70, 229, 0.2);
 }
 
 .btn-primary:hover {
-  box-shadow: 0 6px 8px rgba(99, 102, 241, 0.4);
+  box-shadow: 0 4px 8px rgba(79, 70, 229, 0.3);
   transform: translateY(-1px);
 }
 
 .btn-secondary {
-  background-color: rgba(75, 85, 99, 0.4);
-  color: white;
+  background-color: rgba(55, 65, 81, 0.6); /* Darker secondary */
+  color: #d1d5db; /* Lighter text */
   font-weight: 500;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 1rem; /* Consistent padding */
   border-radius: 0.5rem;
   transition: all 0.2s ease;
-  border: 1px solid rgba(75, 85, 99, 0.6);
+  border: 1px solid rgba(75, 85, 99, 0.8); /* More visible border */
 }
 
 .btn-secondary:hover {
-  background-color: rgba(75, 85, 99, 0.6);
+  background-color: rgba(75, 85, 99, 0.7);
+  border-color: rgba(107, 114, 128, 1);
+  color: #f3f4f6;
 }
 
 .btn-outline {
@@ -387,6 +527,22 @@ input:checked + .toggle-slider:before {
 @media (max-width: 640px) {
   .profile-header {
     padding: 1rem;
+    flex-direction: column; /* Stack header items on small screens */
+    align-items: center;
+    text-align: center;
+  }
+
+  .profile-info {
+    align-items: center;
+    text-align: center;
+  }
+
+  .profile-info .flex { /* Target button container */
+    justify-content: center; /* Center buttons */
+  }
+
+  .card-grid {
+    grid-template-columns: 1fr; /* Single column on small screens */
   }
   
   .settings-item, 
@@ -410,6 +566,24 @@ input:checked + .toggle-slider:before {
   .settings-item-info {
     margin-bottom: 0.5rem;
   }
+}
+
+@media (min-width: 640px) { /* Use min-width for sm breakpoint */
+  .profile-avatar {
+    width: 80px;  /* Smaller than before for desktop */
+    height: 80px; /* Smaller than before for desktop */
+  }
+  /* ...other sm breakpoint styles... */
+}
+
+/* Also add specific sizes for smaller profile avatars in comments/posts */
+.avatar-small {
+  position: relative;
+  border-radius: 50%;
+  overflow: hidden;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
 }
 
 /* Loading Spinner */
