@@ -279,20 +279,22 @@ export default function UserAccountPage() {
   };
 
   const fetchUserOrders = async () => {
+    if (!id) return; // Ensure id is available
     try {
       const { data, error } = await supabase
         .from('orders')
         .select(`
           *,
-          order_items (*)
+          order_items ( count )
         `)
         .eq('auth_id', id)
-        .order('created_at', { ascending: false });
-      
+        .order('order_date', { ascending: false });
+
       if (error) throw error;
       setOrders(data || []);
     } catch (error) {
       console.error('Error fetching orders:', error);
+      setOrders([]);
     }
   };
 
@@ -769,7 +771,7 @@ function ProfileTab({ user, updateProfile, posts }) {
 }
 
 function OrdersTab({ orders }) {
-  if (orders.length === 0) {
+  if (!orders || orders.length === 0) {
     return (
       <TabContainer>
         <EmptyState
@@ -784,49 +786,44 @@ function OrdersTab({ orders }) {
   }
 
   return (
-    <TabContainer title="My Orders">
+    <TabContainer title={`My Orders (${orders.length})`}>
       <div className="card-grid">
-        {orders.map((order) => (
-          <div key={order.id} className="profile-card">
-            <div className="flex flex-col md:flex-row justify-between md:items-start gap-2 mb-3">
-              <div className="flex-1">
-                <div className="card-label mb-1">Order #{order.id.substring(0, 8)}</div>
-                <div className="font-medium text-gray-200 text-sm">{new Date(order.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
-              </div>
-              <div className={`px-3 py-1 rounded-full text-xs font-semibold capitalize self-start md:self-center whitespace-nowrap
-                ${order.status === 'completed' ? 'bg-green-500/20 text-green-300 ring-1 ring-inset ring-green-500/30' :
-                  order.status === 'processing' ? 'bg-blue-500/20 text-blue-300 ring-1 ring-inset ring-blue-500/30' :
-                  'bg-yellow-500/20 text-yellow-300 ring-1 ring-inset ring-yellow-500/30'}`}>
-                {order.status}
-              </div>
-            </div>
+        {orders.map((order) => {
+          const itemCount = order.order_items?.[0]?.count ?? 0;
 
-            <div className="card-content space-y-2 border-t border-gray-700/60 pt-3">
-              {order.order_items && order.order_items.length > 0 ? (
-                order.order_items.map((item, index) => (
-                  <div key={index} className="flex justify-between items-center text-sm">
-                    <span className="text-gray-300 flex-1 mr-2">
-                      <span className="font-medium">{item.quantity}x</span> {item.product_name}
-                    </span>
-                    <span className="text-gray-400 font-mono whitespace-nowrap">${parseFloat(item.price).toFixed(2)}</span>
-                  </div>
-                ))
-              ) : (
-                <p className="text-sm text-gray-500 italic">No items found for this order.</p>
-              )}
-            </div>
-
-            <div className="card-footer flex flex-col md:flex-row justify-between items-center gap-3">
-              <div className="text-gray-300 text-sm">
-                Total: <span className="text-white font-semibold text-base font-mono">${parseFloat(order.total_amount).toFixed(2)}</span>
+          return (
+            <div key={order.id} className="profile-card">
+              <div className="flex flex-col md:flex-row justify-between md:items-start gap-2 mb-3">
+                <div className="flex-1">
+                  <div className="card-label mb-1">Order #{order.id.substring(0, 8)}</div>
+                  <div className="font-medium text-gray-200 text-sm">{new Date(order.order_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+                </div>
+                <div className={`px-3 py-1 rounded-full text-xs font-semibold capitalize self-start md:self-center whitespace-nowrap
+                  ${order.status === 'completed' ? 'bg-green-500/20 text-green-300 ring-1 ring-inset ring-green-500/30' :
+                    order.status === 'processing' ? 'bg-blue-500/20 text-blue-300 ring-1 ring-inset ring-blue-500/30' :
+                    'bg-yellow-500/20 text-yellow-300 ring-1 ring-inset ring-yellow-500/30'}`}>
+                  {order.status}
+                </div>
               </div>
-              <Link href={`/account/orders/${order.id}`} className="btn-secondary text-xs inline-flex items-center gap-1.5">
-                View Details
-                <FaArrowRight className="w-3 h-3" />
-              </Link>
+
+              <div className="card-content border-t border-gray-700/60 pt-3 mb-3">
+                 <p className="text-sm text-gray-400">
+                    {itemCount} {itemCount === 1 ? 'item' : 'items'} in this order.
+                 </p>
+              </div>
+
+              <div className="card-footer flex flex-col md:flex-row justify-between items-center gap-3">
+                <div className="text-gray-300 text-sm">
+                  Total: <span className="text-white font-semibold text-base font-mono">${parseFloat(order.total_amount).toFixed(2)}</span>
+                </div>
+                <Link href={`/order-confirmation/${order.id}`} className="btn-secondary text-xs inline-flex items-center gap-1.5">
+                  View Details
+                  <FaArrowRight className="w-3 h-3" />
+                </Link>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </TabContainer>
   );

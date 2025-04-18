@@ -1,0 +1,64 @@
+/* Container for the whole checkout page content */
+.checkout-page-container {
+  /* Add any overall page padding/margins if needed */
+}
+
+/* Order Summary Specific Styles */
+.checkout-order-summary {
+  /* Styles for the summary box container */
+}
+
+.checkout-summary-item {
+  /* Styles for each item row in the summary */
+}
+
+/* Target the container div for the image */
+.checkout-summary-image-container {
+  width: 50px; /* Adjust width as needed */
+  height: 50px; /* Adjust height as needed */
+  flex-shrink: 0; /* Prevent shrinking */
+  position: relative; /* Needed for Image with layout="fill" */
+  margin-right: 0.75rem; /* Space between image and text ( Tailwind mr-3 ) */
+}
+
+/* Ensure the Image component inside fills the container */
+.checkout-summary-image-container img {
+  object-fit: cover; /* Crop image nicely */
+  border-radius: 4px; /* Optional: match rounding */
+}
+
+/* Placeholder div styling (if no image) */
+.checkout-summary-image-container > div {
+  width: 100%;
+  height: 100%;
+  /* Inherit background/text styles from Tailwind or add specific ones */
+}
+
+
+/* Payment Details Section Styles */
+.checkout-payment-details {
+  /* Styles for the payment form container */
+}
+
+/* You can add more specific styles for Stripe elements if needed */
+#payment-element {
+  margin-bottom: 1.5rem; /* Add some space below the payment element */
+}
+
+#payment-message {
+  margin-top: 1rem;
+  font-size: 0.875rem; /* text-sm */
+}
+
+/* Style the submit button (can override Tailwind if necessary) */
+#submit {
+  /* Example: ensure consistent height */
+  /* height: 48px; */
+}
+
+/* Spinner styles (already included inline in CheckoutForm.js, but could be moved here) */
+/* .spinner { ... } */
+/* .spinner:before { ... } */
+/* .spinner:after { ... } */
+/* @keyframes loading { ... } */
+

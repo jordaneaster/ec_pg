@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import AddToCartButton from './AddToCartButton'; // Import the AddToCartButton
 
 export default function ProductCard({ product }) {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -51,12 +52,12 @@ export default function ProductCard({ product }) {
         
         <div className="product-price">${parseFloat(product.price).toFixed(2)}</div>
         
-        <button 
-          className="product-button"
-          disabled={product.out_of_stock}
-        >
-          {product.out_of_stock ? 'Out of Stock' : 'Add to Cart'}
-        </button>
+        <div className="flex justify-start">
+          <AddToCartButton 
+            product={product} 
+            className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded px-1.5 py-0.5 text-xs transition duration-150 ease-in-out max-w-[80px]" 
+          />
+        </div>
       </div>
     </div>
   );
