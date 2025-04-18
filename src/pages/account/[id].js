@@ -67,15 +67,15 @@ const ProfilePictureModal = ({ isOpen, onClose, userData, username, onUpload }) 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 overflow-y-auto bg-black/80 z-[9999] flex items-center justify-center p-4" 
-         onClick={onClose} style={{backdropFilter: 'blur(5px)'}}>
-      <div className="bg-gray-800 rounded-xl w-full max-w-md shadow-2xl border border-gray-700" 
+    <div className="fixed inset-0 overflow-y-auto bg-black/70 z-[9999] flex items-center justify-center p-4 backdrop-blur-md" 
+         onClick={onClose}>
+      <div className="bg-gray-800/80 backdrop-blur-sm rounded-xl w-full max-w-md shadow-2xl border border-gray-700/50" 
            onClick={e => e.stopPropagation()}>
-        <div className="flex justify-between items-center p-4 border-b border-gray-700">
-          <h3 className="text-lg font-semibold text-white">Update Profile Picture</h3>
+        <div className="flex justify-between items-center p-4 border-b border-gray-700/50">
+          <h3 className="text-lg font-semibold text-gray-100">Update Profile Picture</h3>
           <button 
             onClick={onClose}
-            className="text-gray-400 hover:text-white p-1.5 hover:bg-gray-700 rounded-full"
+            className="text-gray-500 hover:text-white p-1.5 hover:bg-gray-700/50 rounded-full transition-colors"
           >
             <FaTimes />
           </button>
@@ -83,45 +83,35 @@ const ProfilePictureModal = ({ isOpen, onClose, userData, username, onUpload }) 
         
         <div className="p-6">
           <div className="flex flex-col items-center mb-6">
-            <div className="flex items-center gap-6 mb-4">
-              <div className="text-center">
-                <p className="text-xs text-gray-500 mb-2">Current</p>
-                <div className="w-20 h-20 rounded-full bg-gray-700 overflow-hidden relative">
-                  {userData?.profile_image_url ? (
-                    <Image
-                      src={userData.profile_image_url}
-                      alt="Current profile"
-                      width={80}
-                      height={80}
-                      className="object-cover w-full h-full"
-                    />
-                  ) : (
-                    <span className="text-2xl font-semibold text-white flex items-center justify-center h-full">
-                      {username.charAt(0).toUpperCase()}
-                    </span>
-                  )}
-                </div>
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-20 h-20 rounded-full bg-gray-700 overflow-hidden relative border-2 border-gray-600">
+                {userData?.profile_image_url ? (
+                  <Image
+                    src={userData.profile_image_url}
+                    alt="Current profile"
+                    width={80}
+                    height={80}
+                    className="object-cover w-full h-full"
+                  />
+                ) : (
+                  <span className="text-3xl font-semibold text-white flex items-center justify-center h-full">
+                    {username.charAt(0).toUpperCase()}
+                  </span>
+                )}
               </div>
               
-              <div className="text-gray-500">
-                <FaArrowRight className="w-5 h-5" />
-              </div>
+              <FaArrowRight className="w-5 h-5 text-gray-500" />
               
-              <div className="text-center">
-                <p className="text-xs text-gray-500 mb-2">New</p>
-                <div className="w-20 h-20 rounded-full bg-gray-700 overflow-hidden relative">
-                  {previewUrl ? (
-                    <img 
-                      src={previewUrl}
-                      alt="Preview"
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="flex items-center justify-center h-full text-gray-500">
-                      <FaCamera className="w-6 h-6" />
-                    </div>
-                  )}
-                </div>
+              <div className="w-20 h-20 rounded-full bg-gray-700 overflow-hidden relative border-2 border-dashed border-gray-600 flex items-center justify-center">
+                {previewUrl ? (
+                  <img 
+                    src={previewUrl}
+                    alt="Preview"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <FaCamera className="w-6 h-6 text-gray-500" />
+                )}
               </div>
             </div>
             
@@ -134,24 +124,24 @@ const ProfilePictureModal = ({ isOpen, onClose, userData, username, onUpload }) 
             />
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="btn-secondary inline-flex items-center gap-2 mt-2"
+              className="btn-secondary inline-flex items-center gap-2 mt-2 text-sm"
               type="button"
             >
               <FaUpload className="w-4 h-4" />
-              <span>{selectedFile ? 'Choose Different Image' : 'Select Image'}</span>
+              <span>{selectedFile ? 'Change Image' : 'Select Image'}</span>
             </button>
             
             {selectedFile && (
-              <p className="text-xs text-gray-500 mt-2">
-                Selected: {selectedFile.name}
+              <p className="text-xs text-gray-400 mt-2 truncate max-w-[200px]">
+                {selectedFile.name}
               </p>
             )}
           </div>
           
           {uploadProgress > 0 && (
-            <div className="w-full bg-gray-700 rounded-full h-2 mb-4">
+            <div className="w-full bg-gray-700 rounded-full h-1.5 mb-4 overflow-hidden">
               <div 
-                className="bg-indigo-600 h-2 rounded-full transition-all duration-300" 
+                className="bg-indigo-500 h-full rounded-full transition-all duration-300" 
                 style={{ width: `${uploadProgress}%` }}
               ></div>
             </div>
@@ -160,7 +150,7 @@ const ProfilePictureModal = ({ isOpen, onClose, userData, username, onUpload }) 
           <div className="flex justify-end gap-3 mt-4">
             <button
               onClick={onClose}
-              className="px-4 py-2 text-gray-300 hover:text-white"
+              className="btn-secondary text-sm"
               type="button"
             >
               Cancel
@@ -168,13 +158,13 @@ const ProfilePictureModal = ({ isOpen, onClose, userData, username, onUpload }) 
             <button
               onClick={handleUpload}
               disabled={!selectedFile || uploadProgress > 0}
-              className={`btn-primary ${(!selectedFile || uploadProgress > 0) ? 'opacity-50 cursor-not-allowed' : ''}`}
+              className={`btn-primary text-sm ${(!selectedFile || uploadProgress > 0) ? 'opacity-50 cursor-not-allowed' : ''}`}
               type="button"
             >
               {uploadProgress > 0 ? (
-                <>Uploading... {uploadProgress}%</>
+                <>Uploading {uploadProgress}%</>
               ) : (
-                <>Save New Picture</>
+                <>Save Picture</>
               )}
             </button>
           </div>
@@ -522,33 +512,22 @@ export default function UserAccountPage() {
               e.stopPropagation();
               setIsEditingPicture(true);
             }} 
-            className="absolute -bottom-1 -right-1 bg-gray-900/80 hover:bg-indigo-600 p-1.5 rounded-full text-gray-300 hover:text-white transition-all duration-200 opacity-0 group-hover:opacity-100 focus:opacity-100"
+            aria-label="Edit Profile Picture"
+            className="absolute bottom-0 right-0 flex items-center gap-1 bg-gray-900/70 hover:bg-indigo-600 px-2 py-1 rounded-full text-gray-300 hover:text-white transition-all duration-200 opacity-0 group-hover:opacity-100 focus:opacity-100 shadow-md"
           >
-            <FaCamera className="w-3 h-3" />
-            <span className="sr-only">Edit Profile Picture</span>
+            <FaCamera className="w-3 h-3" /> 
+            <span className="text-xs font-medium hidden sm:inline">Edit</span> 
           </button>
         </div>
 
         <div className="profile-info flex-1 mt-2 sm:mt-1">
-          <h1 className="text-3xl sm:text-4xl font-bold text-white">
+          <h1 className="text-3xl sm:text-4xl font-bold text-white mb-1">
             {username}
           </h1>
-          <div className="space-y-2 text-gray-400 mb-5">
-            <p className="flex justify-center sm:justify-start items-center gap-2.5 text-sm">
-              <FaEnvelope className="text-gray-500" />
-              <span>{userData?.email || user?.email || 'No email available'}</span>
-            </p>
-            {userData?.phone_number && (
-              <p className="flex justify-center sm:justify-start items-center gap-2.5 text-sm">
-                <FaPhone className="text-gray-500" />
-                <span>{userData.phone_number}</span>
-              </p>
-            )}
-            <p className="text-gray-500 text-xs flex justify-center sm:justify-start items-center gap-2.5">
-              <FaCalendarAlt className="text-gray-600" />
-              <span>Member since {joinedDate}</span>
-            </p>
-          </div>
+          <p className="text-gray-500 text-xs mb-4 flex justify-center sm:justify-start items-center gap-1.5">
+            <FaCalendarAlt className="w-3 h-3 text-gray-600" />
+            <span>Joined {joinedDate}</span>
+          </p>
 
           <div className="flex flex-wrap justify-center sm:justify-start gap-3">
             <button

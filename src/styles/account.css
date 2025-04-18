@@ -53,10 +53,102 @@
   border-radius: 50% !important; /* Ensure image itself is rounded */
 }
 
+.profile-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem 0;
+  position: relative;
+}
+
 .profile-info h1 {
   margin-bottom: 0.5rem;
-  font-size: 2rem; /* Slightly larger name */
-  font-weight: 700; /* Bolder name */
+  font-size: 1.75rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, #fff, #d1d5db);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+}
+
+/* Contact info container */
+.profile-info .space-y-2 {
+  margin-bottom: 1.25rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  transition: transform 0.2s ease;
+}
+
+/* Contact info items */
+.profile-info .space-y-2 p {
+  position: relative;
+  padding-left: 0.25rem;
+  transition: all 0.2s ease;
+}
+
+.profile-info .space-y-2 p:hover {
+  transform: translateX(3px);
+}
+
+.profile-info .space-y-2 p svg {
+  transition: color 0.2s ease;
+}
+
+.profile-info .space-y-2 p:hover svg {
+  color: #6366F1 !important;
+}
+
+/* Action buttons container */
+.profile-info .flex.flex-wrap {
+  display: flex;
+  gap: 0.75rem;
+}
+
+/* Badge style for profile verification or status */
+.profile-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #a3a3ff;
+  background-color: rgba(99, 102, 241, 0.15);
+  border-radius: 9999px;
+  padding: 0.25rem 0.75rem;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+  transition: all 0.2s ease;
+}
+
+.profile-badge svg {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
+/* Responsive styles */
+@media (max-width: 640px) {
+  .profile-info {
+    width: 100%;
+    align-items: center;
+  }
+  
+  .profile-info h1 {
+    font-size: 1.5rem;
+    text-align: center;
+  }
+  
+  .profile-info .space-y-2 {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .profile-info .space-y-2 p:hover {
+    transform: none;
+  }
 }
 
 /* Sidebar Navigation */
