@@ -191,8 +191,10 @@ export default function UserAccountPage() {
   const [activeTab, setActiveTab] = useState('profile');
   const [orders, setOrders] = useState([]);
   const [reservations, setReservations] = useState([]);
+  const [reservationsLoading, setReservationsLoading] = useState(false);
   const [userPosts, setUserPosts] = useState([]);
   const [isEditingPicture, setIsEditingPicture] = useState(false);
+  const [tabChangeCount, setTabChangeCount] = useState(0);
   const router = useRouter();
   const { id } = router.query;
 
@@ -204,15 +206,29 @@ export default function UserAccountPage() {
     
     if (user && id) {
       if (user.id !== id) {
+        console.warn(`User ID mismatch: Auth context user.id (${user.id}) !== route id (${id}). Redirecting.`);
         router.push('/account');
         return;
       }
+      console.log(`UserAccountPage: Fetching initial data for user id: ${id}`);
       fetchUserData();
       fetchUserOrders();
+      console.log("Initial fetch of reservations on component mount");
       fetchUserReservations();
       fetchUserPosts();
+    } else if (!authLoading && user && !id) {
+      console.log("UserAccountPage: User loaded, but route ID is not yet available.");
     }
   }, [user, authLoading, id, router]);
+
+  useEffect(() => {
+    console.log(`Tab changed to: ${activeTab} (change count: ${tabChangeCount})`);
+    
+    if (activeTab === 'reservations' && id && tabChangeCount > 0) {
+      console.log(`Tab changed to reservations at count: ${tabChangeCount}, force-fetching reservations`);
+      fetchUserReservations();
+    }
+  }, [activeTab, id, tabChangeCount]);
 
   const fetchUserData = async () => {
     setLoading(true);
@@ -291,20 +307,49 @@ export default function UserAccountPage() {
   };
 
   const fetchUserReservations = async () => {
+    if (!id) {
+      console.warn("fetchUserReservations called without a valid user ID (route id). Aborting.");
+      setReservations([]);
+      setReservationsLoading(false);
+      return;
+    }
+    
+    setReservationsLoading(true);
+    console.log(`Attempting to fetch reservations: table=reservations, column='user_id', value=${id}`); 
+
     try {
-      const { data, error } = await supabase
+      const query = supabase
         .from('reservations')
         .select(`
           *,
-          events (id, title, event_date, location)
+          event_id:events ( id, title, event_date, location ) 
         `)
-        .eq('auth_id', id)
+        .eq('user_id', id)
         .order('created_at', { ascending: false });
+
+      console.log("Executing Supabase query with explicit join on event_id");
+
+      const { data, error, status, count } = await query;
       
-      if (error) throw error;
-      setReservations(data || []);
+      console.log(`Supabase reservation fetch status: ${status}, count: ${count}`);
+
+      if (error) {
+        console.error('Error fetching reservations:', error);
+        setReservations([]);
+      } else {
+        console.log(`Successfully fetched ${data?.length || 0} reservations for user ${id}.`);
+        if (data && data.length > 0) {
+            console.log("Sample reservation data structure:", data[0]);
+        }
+        setReservations(data || []);
+        console.log(`State update: setReservations called with ${data?.length || 0} items.`);
+      }
     } catch (error) {
-      console.error('Error fetching reservations:', error);
+      console.error('Critical error during fetchUserReservations process:', error);
+      setReservations([]);
+    } finally {
+      setReservationsLoading(false);
+      console.log("fetchUserReservations finished, loading state set to FALSE.");
     }
   };
 
@@ -398,7 +443,9 @@ export default function UserAccountPage() {
   };
 
   const handleTabChange = (tab) => {
+    console.log(`Tab change requested from ${activeTab} to ${tab}`);
     setActiveTab(tab);
+    setTabChangeCount((prev) => prev + 1);
   };
 
   const renderActiveTab = () => {
@@ -414,7 +461,7 @@ export default function UserAccountPage() {
       case 'orders':
         return <OrdersTab orders={orders} />;
       case 'reservations':
-        return <ReservationsTab reservations={reservations} />;
+        return <ReservationsTab reservations={reservations} isLoading={reservationsLoading} />;
       case 'inbox':
         return <InboxTab />;
       default:
@@ -565,6 +612,12 @@ export default function UserAccountPage() {
         </div>
 
         <div className="profile-panel flex-1 min-w-0 bg-gray-800/60 backdrop-blur-sm rounded-xl overflow-hidden">
+          {process.env.NODE_ENV === 'development' && (
+            <div className="text-xs text-gray-500 p-2 bg-gray-800">
+              Current Tab: {activeTab} | Changes: {tabChangeCount}
+            </div>
+          )}
+          
           {renderActiveTab()}
         </div>
       </div>
@@ -586,15 +639,17 @@ const TabContainer = ({ children, title }) => (
 );
 
 const EmptyState = ({ icon: Icon, title, message, actionLink, actionText }) => (
-  <div className="text-center py-12 px-6">
+  <div className="flex flex-col items-center text-center py-12 px-6"> 
     <Icon className="text-6xl text-gray-600 mx-auto mb-6" />
     <h3 className="text-xl font-semibold text-gray-200 mb-2">{title}</h3>
-    <p className="text-gray-400 mb-6 max-w-sm mx-auto">{message}</p>
+    <p className="text-gray-400 mb-6 max-w-md mx-auto">{message}</p> 
     {actionLink && actionText && (
-      <Link href={actionLink} className="btn-primary inline-flex items-center gap-2">
-        {actionText}
-        <FaArrowRight className="w-3 h-3" />
-      </Link>
+      <div className="mt-4"> 
+        <Link href={actionLink} className="btn-primary inline-flex items-center gap-2">
+          {actionText}
+          <FaArrowRight className="w-3 h-3" />
+        </Link>
+      </div>
     )}
   </div>
 );
@@ -798,14 +853,35 @@ function OrdersTab({ orders }) {
   );
 }
 
-function ReservationsTab({ reservations }) {
-  if (reservations.length === 0) {
+function ReservationsTab({ reservations, isLoading }) {
+  console.log("ReservationsTab rendered. isLoading:", isLoading, "Reservations prop:", reservations);
+  
+  if (reservations && reservations.length > 0) {
+    console.log("First reservation structure:", JSON.stringify(reservations[0], null, 2));
+  }
+
+  if (isLoading) {
+    return (
+      <TabContainer title="My Reservations">
+        <div className="flex justify-center items-center py-12">
+          <div className="spinner-container">
+            <div className="absolute w-8 h-8 border-4 border-indigo-500/30 rounded-full"></div>
+            <div className="absolute w-8 h-8 border-t-4 border-indigo-500 rounded-full animate-spin"></div>
+          </div>
+          <span className="ml-3 text-gray-400">Loading your reservations...</span>
+        </div>
+      </TabContainer>
+    );
+  }
+
+  if (!reservations || reservations.length === 0) {
+    console.log("ReservationsTab: No reservations found or prop is empty/null.");
     return (
       <TabContainer>
         <EmptyState
           icon={FaTicketAlt}
-          title="No Reservations Yet"
-          message="You haven't reserved tickets for any events. Check out upcoming events!"
+          title="No Reservations Found"
+          message="You haven't reserved tickets for any events yet. Check out upcoming events to make a reservation!"
           actionLink="/events"
           actionText="Browse Events"
         />
@@ -813,17 +889,28 @@ function ReservationsTab({ reservations }) {
     );
   }
 
+  console.log(`ReservationsTab: Rendering ${reservations.length} reservations.`);
   return (
-    <TabContainer title="My Reservations">
+    <TabContainer title={`My Reservations (${reservations.length})`}>
       <div className="card-grid">
         {reservations.map((reservation) => {
-          const isPast = reservation.events?.event_date && new Date(reservation.events.event_date) < new Date();
+          const hasEventDetails = typeof reservation.event_id === 'object' && reservation.event_id !== null;
+          const eventData = hasEventDetails ? reservation.event_id : null;
+          
           const isExpired = reservation.expiration_time && new Date(reservation.expiration_time) < new Date();
-          const eventDate = reservation.events?.event_date
-            ? new Date(reservation.events.event_date).toLocaleString('en-US', {
+          const isPast = eventData?.event_date ? new Date(eventData.event_date) < new Date() :
+                        isExpired;
+          
+          const formattedCreationDate = new Date(reservation.created_at)
+            .toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+          
+          const eventTitle = eventData?.title || `Event #${reservation.event_id.substring(0, 8)}`;
+          const eventLocation = eventData?.location || 'Location details unavailable';
+          const eventDate = eventData?.event_date
+            ? new Date(eventData.event_date).toLocaleString('en-US', {
                 year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true
               })
-            : 'Date not available';
+            : 'Date information unavailable';
 
           let statusText = reservation.status.charAt(0).toUpperCase() + reservation.status.slice(1);
           let statusColor = 'bg-blue-500/20 text-blue-300 ring-1 ring-inset ring-blue-500/30';
@@ -839,48 +926,57 @@ function ReservationsTab({ reservations }) {
             statusColor = 'bg-green-500/20 text-green-300 ring-1 ring-inset ring-green-500/30';
           }
 
-          return (
+            return (
             <div key={reservation.id} className="profile-card">
+              <div className="text-xs text-gray-500 mb-1">Reservation #{reservation.id.substring(0, 8)}</div>
               <div className="flex flex-col md:flex-row justify-between md:items-start gap-2 mb-3">
-                <div className="flex-1 min-w-0">
-                  <h3 className="card-header truncate">{reservation.events?.title || 'Event'}</h3>
-                  <p className="text-sm text-gray-400 flex items-center gap-1.5 mb-0.5">
-                    <FaCalendarAlt className="w-3 h-3 text-gray-500 flex-shrink-0" /> {eventDate}
-                  </p>
-                  <p className="text-sm text-gray-400 truncate flex items-center gap-1.5">
-                    <FaMapMarkerAlt className="w-3 h-3 text-gray-500 flex-shrink-0" />
-                    {reservation.events?.location || 'Location not available'}
-                  </p>
-                </div>
-                <div className={`px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap self-start md:self-center ${statusColor}`}>
-                  {statusText}
-                </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="card-header truncate">{eventTitle}</h3>
+                <p className="text-sm text-gray-400 flex items-center gap-1.5 mb-0.5">
+                <FaCalendarAlt className="w-3 h-3 text-gray-500 flex-shrink-0" /> {eventDate}
+                </p>
+                <p className="text-sm text-gray-400 truncate flex items-center gap-1.5">
+                <FaMapMarkerAlt className="w-3 h-3 text-gray-500 flex-shrink-0" />
+                {eventLocation}
+                </p>
+              </div>
+              <div className={`px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap self-start md:self-center ${statusColor}`}>
+                {statusText}
+              </div>
               </div>
 
-              <div className="card-content flex flex-wrap justify-between items-center text-sm gap-3 border-t border-gray-700/60 pt-3">
-                <span className="text-gray-300">
-                  <span className="font-medium">{reservation.num_tickets}</span> {parseInt(reservation.num_tickets) === 1 ? 'Ticket' : 'Tickets'}
-                  {reservation.ticket_type && ` (${reservation.ticket_type})`}
-                </span>
-                {reservation.qr_code_url && !isExpired && (
-                  <Link href={reservation.qr_code_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-indigo-400 hover:text-indigo-300 transition duration-150 font-medium text-xs bg-indigo-500/10 hover:bg-indigo-500/20 px-3 py-1 rounded-md">
-                    <FaQrcode />
-                    <span>View QR Code</span>
-                  </Link>
-                )}
+              <div className="card-content border-t border-gray-700/60 pt-3">
+              <div className="text-sm text-gray-300 mb-3">
+                <span className="font-medium">{reservation.num_tickets}</span> {parseInt(reservation.num_tickets) === 1 ? 'Ticket' : 'Tickets'}
+                {reservation.ticket_type && ` (${reservation.ticket_type})`}
               </div>
-
-              <div className="card-footer flex flex-col md:flex-row justify-between items-center gap-3">
-                <div className="text-gray-500 text-xs">
-                  Reserved on {new Date(reservation.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
-                </div>
-                <Link href={`/account/reservations/${reservation.id}`} className="btn-secondary text-xs inline-flex items-center gap-1.5">
-                  View Details
-                  <FaArrowRight className="w-3 h-3" />
+              
+              {reservation.qr_code_url && !isExpired && (
+                <div className="mb-3">
+                <Link href={reservation.qr_code_url} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="inline-flex items-center gap-1.5 text-indigo-400 hover:text-indigo-300 transition duration-150 font-medium text-xs bg-indigo-500/10 hover:bg-indigo-500/20 px-3 py-1.5 rounded-md">
+                  <FaQrcode className="flex-shrink-0" />
+                  <span>View QR Code</span>
                 </Link>
+                </div>
+              )}
+              </div>
+
+              <div className="card-footer flex flex-col md:flex-row md:justify-end items-center gap-3">
+              <div className="text-gray-500 text-xs whitespace-nowrap">
+                Reserved on {formattedCreationDate}
+              </div>
+              <Link 
+                href={`/account/reservations/${reservation.id}`} 
+                className="btn-secondary text-xs inline-flex items-center gap-1.5 whitespace-nowrap flex-shrink-0"
+              >
+                View Details
+              </Link>
               </div>
             </div>
-          );
+            );
         })}
       </div>
     </TabContainer>

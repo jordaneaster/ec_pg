@@ -7,7 +7,7 @@ import Nav from '../components/Nav'; // Import Nav component
 import '../styles/globals.css';
 import '../styles/auth.css';
 import '../styles/account.css'; // Add account styles
-
+import '../styles/reservations.css'
 export default function MyApp({ Component, pageProps }) {
   const router = useRouter();
   

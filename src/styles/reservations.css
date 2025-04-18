@@ -1,0 +1,176 @@
+/* Reservation Details Page Styles */
+.reservation-qr-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.qr-code-wrapper {
+  width: 220px;
+  height: 220px;
+  padding: 16px;
+  background-color: white;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.qr-code-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+@media (max-width: 640px) {
+  .qr-code-wrapper {
+    width: 180px;
+    height: 180px;
+    padding: 12px;
+  }
+}
+
+.reservation-image-container {
+  width: 100%;
+  max-width: 32rem;
+  margin: 0 auto;
+}
+
+/* Event Image Container */
+.event-image-container {
+  width: 120px;
+  height: 120px;
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 1px solid rgba(75, 85, 99, 0.5);
+  background-color: rgba(31, 41, 55, 0.5);
+}
+
+.event-image {
+  object-fit: cover;
+}
+
+@media (min-width: 768px) {
+  .event-image-container {
+    width: 150px;
+    height: 150px;
+  }
+}
+
+/* QR Code Action Buttons */
+.qr-action-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.qr-action-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  transition: all 0.2s ease;
+  min-width: 120px;
+}
+
+.qr-action-button:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.qr-action-button svg {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+}
+
+@media (max-width: 480px) {
+  .qr-action-buttons {
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+  }
+  
+  .qr-action-button {
+    width: 100%;
+  }
+}
+
+/* Footer Action Buttons */
+.footer-action-buttons {
+  display: flex;
+  gap: 16px; /* Increased from gap-3 (12px) to 16px */
+  align-items: center;
+}
+
+.footer-action-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  min-width: 120px;
+  text-align: center;
+}
+
+.footer-back-button {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.footer-back-button:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.footer-print-button {
+  background-color: rgba(79, 70, 229, 0.1);
+  color: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(79, 70, 229, 0.3);
+}
+
+.footer-print-button:hover {
+  background-color: rgba(79, 70, 229, 0.2);
+  border-color: rgba(79, 70, 229, 0.4);
+}
+
+/* Page Footer Container */
+.reservation-footer {
+  padding: 1.5rem;
+  padding-bottom: 2rem; /* Increased bottom padding */
+  border-top: 1px solid rgba(55, 65, 81, 1); /* Same as border-t border-gray-700 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .reservation-footer {
+    flex-direction: row;
+    justify-content: space-between;
+    padding-bottom: 2.5rem; /* Even more bottom padding on larger screens */
+  }
+}
